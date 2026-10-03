@@ -1,0 +1,11 @@
+<main>
+  <h1>Status:</h1>
+
+  @if (health(); as h) {
+    <p>API: {{ h.status }} ({{ h.timestamp }})</p>
+  } @else if (error()) {
+    <p>No se pudo conectar con el servidor.</p>
+  } @else {
+    <p>Conectando con el servidor…</p>
+  }
+</main>
