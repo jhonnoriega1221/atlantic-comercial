@@ -5,10 +5,10 @@ import os
 # Definimos las constantes
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 EXCEL_PATH = os.path.join(BASE_DIR, '..', 'data', 'Base_Original.xlsx')
-DB_PATH = os.path.join(BASE_DIR, '..', 'db', 'afs-comercial.sqlite')
+DB_PATH = os.path.join(BASE_DIR, '..', 'db', 'afs_commercial.sqlite')
 SCHEMA_PATH = os.path.join(BASE_DIR, '..', 'db', 'schema.sql')
 
-def limpiar_datos():
+def data_ingestion():
     print("Iniciando ingesta, limpieza y creación de base de datos con esquema estrella")
     
     # Extraer datos de excel
@@ -86,4 +86,4 @@ def limpiar_datos():
     print(f"Base de datos creada correctamente en: {DB_PATH}")
 
 if __name__ == "__main__":
-    limpiar_datos()
+    data_ingestion()

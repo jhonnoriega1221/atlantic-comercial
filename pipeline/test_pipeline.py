@@ -3,7 +3,7 @@ import sqlite3
 import os
 
 # Constante con ruta dinámica a la base de datos SQLite
-DB_PATH = os.path.join(os.path.dirname(__file__), '..', 'db', 'afs-comercial.sqlite')
+DB_PATH = os.path.join(os.path.dirname(__file__), '..', 'db', 'afs_commercial.sqlite')
 
 @pytest.fixture
 def db_conn():
