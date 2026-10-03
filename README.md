@@ -7,3 +7,5 @@ npm install
 npm --prefix backend install
 npm --prefix frontend install
 ```
+
+cambio readmi
