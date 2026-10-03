@@ -7,7 +7,7 @@ Demo disponible aqui:
 
 Instalar las dependencias con estos comandos
 
-### Script de injesta
+### Script de ingesta
 
 - Crear entorno virtual de python
 
@@ -37,12 +37,12 @@ npm --prefix frontend install
 
 ## Ejecución del proyecto
 
-### Ejecutar script de injesta y crear base de datos
+### Ejecutar script de ingesta y crear base de datos
 
-Ejecutar el script de injesta
+Ejecutar el script de ingesta
 
 ```
-     python .\pipeline\injest.py
+     python .\pipeline\data_ingestion.py
 ```
 
 Ejecutar script para probar

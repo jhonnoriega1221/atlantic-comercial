@@ -1,6 +1,6 @@
 # Reporte de Calidad de Datos (Data Quality) y Modelado
 
-Este documento detalla los hallazgos de calidad encontrados durante la fase de exploración del archivo fuente (`Base_Original.xlsx`), el impacto cuantitativo de cada anomalía y las decisiones de ingeniería y negocio aplicadas en el pipeline de ingesta (`pipeline/injest.py`) y en la definición del esquema de base de datos (`db/schema.sql`).
+Este documento detalla los hallazgos de calidad encontrados durante la fase de exploración del archivo fuente (`Base_Original.xlsx`), el impacto cuantitativo de cada anomalía y las decisiones de ingeniería y negocio aplicadas en el pipeline de ingesta (`pipeline/data_ingestion.py`) y en la definición del esquema de base de datos (`db/schema.sql`).
 
 ---
 
@@ -46,7 +46,7 @@ Se detectaron valores en cero y negativos en la la columna `Neto` de la tabla `V
 En la tabla de Sedes en el Excel, la ubicación "COTA" estaba registrada tipo título (`Cota`), mientras que el resto de sedes estaban en mayúsculas (`BOGOTA`, `MEDELLIN`, `CALI`, `BARRANQUILLA`, `CARTAGENA`, `BUCARAMANGA`, `PEREIRA`).
 
 - **Impacto Cuantitativo:** 1 registro en la tabla maestra `Sedes` (`ASE-022`).
-- **Resolución:** Se estandarizó la columna `Sede` aplicando transformación a mayúsculas sostenidas (`str.upper().str.strip()`) durante el script de `injest.py`.
+- **Resolución:** Se estandarizó la columna `Sede` aplicando transformación a mayúsculas sostenidas (`str.upper().str.strip()`) durante el script de `data_ingestion.py`.
 
 ---
 
