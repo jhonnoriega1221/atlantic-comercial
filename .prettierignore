@@ -1,0 +1,9 @@
+node_modules
+dist
+build
+coverage
+.angular
+.husky/_
+*.db
+*.xlsx
+package-lock.json
