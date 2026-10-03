@@ -1,0 +1,47 @@
+# --- Dependencias ----------------
+node_modules/
+.venv/
+venv/
+env/
+__pycache__/
+*.pyc
+
+# --- Builds y cachés -------------------
+dist/
+build/
+coverage/
+.angular/
+.pytest_cache/
+.ruff_cache/
+*.tsbuildinfo
+
+# --- Secretos -------------------
+.env
+.env.*
+!.env.example
+*.pem
+
+# -- Base de datos -------------------------
+# Solo se ignoran los temporales de SQLite.
+*.db-journal
+*.db-wal
+*.db-shm
+*.sqlite-journal
+*.sqlite-shm
+*.sqlite-wal
+
+# -- Datos fuente -------------------
+# Archivos temporales de Excel (aparecen cuando el archivo está abierto)
+~$*
+# data/*.xlsx
+
+# --- Logs -------------------
+*.log
+npm-debug.log*
+
+# ---- Editores y sistema operativo -------------------
+.idea/
+.vscode/*
+!.vscode/extensions.json
+.DS_Store
+Thumbs.db
