@@ -4,7 +4,7 @@ import { AggregatedSalesEntity } from "./domain/entities/aggregated-sales.entity
 import { I_SALES_REPOSITORY } from "./domain/repositories/sales.repository.js";
 import { SalesRepository } from "./infrastructure/repositories/sales.repository.js";
 import { SalesService } from "./application/services/sales.service.js";
-import { SalesController } from "./infrastructure/controller/sales.controller.js";
+import { SalesController } from "./infrastructure/controllers/sales.controller.js";
 
 @Module({
   imports: [TypeOrmModule.forFeature([AggregatedSalesEntity])],
