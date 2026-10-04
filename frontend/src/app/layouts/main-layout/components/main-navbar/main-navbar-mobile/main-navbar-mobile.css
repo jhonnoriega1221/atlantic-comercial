@@ -4,6 +4,7 @@
   right: 0;
   bottom: var(--bottombar-padding);
   height: var(--bottombar-height);
+  z-index: 1;
 }
 
 .navbar-body {
