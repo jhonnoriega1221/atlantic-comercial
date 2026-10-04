@@ -61,25 +61,6 @@ def data_ingestion():
     rel_cliente_asesor.to_sql('rel_cliente_asesor', conn, if_exists='append', index=False)
     df_ventas[['Periodo', 'Cod Principal', 'Cod Material', 'Neto']].to_sql('fact_ventas', conn, if_exists='append', index=False)
 
-    # Crear vista de resumen para que la API responda rapido si se solicita resumen
-    cursor = conn.cursor()
-    cursor.execute("DROP VIEW IF EXISTS view_ventas_agregadas;")
-    cursor.execute("""
-        CREATE VIEW view_ventas_agregadas AS
-        SELECT 
-            v.Periodo,
-            a.Sede,
-            a.[Cod Asesor],
-            a.[Nombre Asesor],
-            COUNT(v.[Cod Principal]) as Transacciones,
-            COUNT(DISTINCT v.[Cod Principal]) as Clientes_Activos,
-            SUM(v.Neto) as Venta_Neta,
-            SUM(CASE WHEN v.Neto < 0 THEN v.Neto ELSE 0 END) as Devoluciones
-        FROM fact_ventas v
-        LEFT JOIN rel_cliente_asesor r ON v.[Cod Principal] = r.[Cod Cliente]
-        LEFT JOIN dim_asesores a ON r.[Cod Asesor] = a.[Cod Asesor]
-        GROUP BY v.Periodo, a.Sede, a.[Cod Asesor], a.[Nombre Asesor];
-    """)
     conn.commit()
     conn.close()
     

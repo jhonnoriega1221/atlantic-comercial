@@ -64,6 +64,36 @@ CREATE TABLE fact_ventas (
     FOREIGN KEY ([Cod Material]) REFERENCES dim_materiales([Cod Material])
 );
 
+--- Vistas:
+-- Vista para el resumen de las ventas
+DROP VIEW IF EXISTS view_ventas_agregadas;
+CREATE VIEW view_ventas_agregadas AS
+SELECT 
+    v.Periodo,
+    a.Sede,
+    a.[Cod Asesor],
+    a.[Nombre Asesor],
+    COUNT(v.[Cod Principal]) as Transacciones,
+    COUNT(DISTINCT v.[Cod Principal]) as Clientes_Activos,
+    SUM(v.Neto) as Venta_Neta,
+    SUM(CASE WHEN v.Neto < 0 THEN v.Neto ELSE 0 END) as Devoluciones
+FROM fact_ventas v
+LEFT JOIN rel_cliente_asesor r ON v.[Cod Principal] = r.[Cod Cliente]
+LEFT JOIN dim_asesores a ON r.[Cod Asesor] = a.[Cod Asesor]
+GROUP BY v.Periodo, a.Sede, a.[Cod Asesor], a.[Nombre Asesor];
+
+-- Vista para el listado y ranking de clientes
+DROP VIEW IF EXISTS view_clientes_resumen;
+CREATE VIEW view_clientes_resumen AS
+SELECT 
+    c.[Cod Cliente],
+    c.[Nombre Cliente],
+    COUNT(v.id) AS Transacciones,
+    SUM(v.Neto) AS Venta_Neta
+FROM dim_clientes c
+LEFT JOIN fact_ventas v ON c.[Cod Cliente] = v.[Cod Principal]
+GROUP BY c.[Cod Cliente], c.[Nombre Cliente];
+
 -- Indices:
 CREATE INDEX idx_fact_periodo ON fact_ventas(Periodo);
 CREATE INDEX idx_fact_cliente ON fact_ventas([Cod Principal]);
