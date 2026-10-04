@@ -1,37 +1,18 @@
 import { InjectRepository } from "@nestjs/typeorm";
-import { ISalesRepository } from "../../domain/repositories/sales.repository.js";
 import { AggregatedSalesEntity } from "../../domain/entities/aggregated-sales.entity.js";
 import { Repository } from "typeorm";
 import { SalesFilterDto } from "../../domain/dto/sales-filter.dto.js";
-import { SelectQueryBuilder } from "typeorm/browser";
+import { applySalesFilters } from "../../../../shared/infrastructure/repository/global-filter.utils.js";
 
-export class SalesRepository implements ISalesRepository {
+export class TypeOrmSalesRepository implements TypeOrmSalesRepository {
   constructor(
     @InjectRepository(AggregatedSalesEntity)
     private readonly repository: Repository<AggregatedSalesEntity>
   ) {}
 
-  private applyFilters(qb: SelectQueryBuilder<AggregatedSalesEntity>, filters: SalesFilterDto) {
-    if (filters.startDate) {
-      qb.andWhere("v.period >= :startDate", { startDate: filters.startDate });
-    }
-
-    if (filters.endDate) {
-      qb.andWhere("v.period <= :endDate", { endDate: filters.endDate });
-    }
-
-    if (filters.location) {
-      qb.andWhere("v.location = :location", { location: filters.location.toUpperCase() });
-    }
-
-    if (filters.advisor) {
-      qb.andWhere("v.advisorCode = :advisor", { advisor: filters.advisor });
-    }
-  }
-
   async getGeneralKpis(filters: SalesFilterDto) {
     const qb = this.repository.createQueryBuilder("v");
-    this.applyFilters(qb, filters);
+    applySalesFilters(qb, filters);
 
     const result = await qb
       .select("SUM(v.netSale)", "netSale")
@@ -50,7 +31,7 @@ export class SalesRepository implements ISalesRepository {
 
   async getSalesTrend(filters: SalesFilterDto) {
     const qb = this.repository.createQueryBuilder("v");
-    this.applyFilters(qb, filters);
+    applySalesFilters(qb, filters);
 
     const result = await qb
       .select("v.period", "period")
@@ -69,7 +50,7 @@ export class SalesRepository implements ISalesRepository {
 
   async getSalesByLocation(filters: SalesFilterDto) {
     const qb = this.repository.createQueryBuilder("v");
-    this.applyFilters(qb, filters);
+    applySalesFilters(qb, filters);
 
     const result = await qb
       .select("v.location", "location")
@@ -86,7 +67,7 @@ export class SalesRepository implements ISalesRepository {
 
   async getAdvisorsRanking(filters: SalesFilterDto, limit: number = 10) {
     const qb = this.repository.createQueryBuilder("v");
-    this.applyFilters(qb, filters);
+    applySalesFilters(qb, filters);
 
     qb.select("v.advisorCode", "advisorCode")
       .addSelect("v.advisorName", "advisorName")

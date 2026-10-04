@@ -1,13 +1,13 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { I_SALES_REPOSITORY } from "../../domain/repositories/sales.repository.js";
-import type { ISalesRepository } from "../../domain/repositories/sales.repository.js";
+import { SalesRepository } from "../../domain/repositories/sales.repository.js";
 import { SalesFilterDto } from "../../domain/dto/sales-filter.dto.js";
+import { calculatePreviousMonthFilter } from "../../../../shared/application/dtos/utils.services.js";
 
 @Injectable()
 export class SalesService {
   constructor(
-    @Inject(I_SALES_REPOSITORY)
-    private readonly salesRepository: ISalesRepository
+    @Inject(SalesRepository)
+    private readonly salesRepository: SalesRepository
   ) {}
 
   async getGeneralKPIs(filters: SalesFilterDto) {
@@ -18,7 +18,7 @@ export class SalesService {
     const returnRate =
       current.netSale > 0 ? (Math.abs(current.returns) / current.netSale) * 100 : 0;
 
-    const previousFilter = this.calculatePreviousMonthFilter(filters);
+    const previousFilter = calculatePreviousMonthFilter(filters);
     const previous = await this.salesRepository.getGeneralKpis(previousFilter);
 
     const salesGrowthRate =
@@ -38,24 +38,6 @@ export class SalesService {
     return await this.salesRepository.getSalesTrend(filters);
   }
 
-  private calculatePreviousMonthFilter(filters: SalesFilterDto): SalesFilterDto {
-    const previousFilter = { ...filters };
-
-    if (filters.startDate) {
-      const date = new Date(filters.startDate);
-      date.setMonth(date.getMonth() - 1);
-      previousFilter.startDate = date.toISOString().split("T")[0];
-    }
-
-    if (filters.endDate) {
-      const date = new Date(filters.endDate);
-      date.setMonth(date.getMonth() - 1);
-      previousFilter.endDate = date.toISOString().split("T")[0];
-    }
-
-    return previousFilter;
-  }
-
   async getLocationsRanking(filters: SalesFilterDto) {
     const data = await this.salesRepository.getSalesByLocation(filters);
 
@@ -73,7 +55,7 @@ export class SalesService {
 
     if (currentRanking.length === 0) return [];
 
-    const prevFilters = this.calculatePreviousMonthFilter(filters);
+    const prevFilters = calculatePreviousMonthFilter(filters);
 
     const prevData = await this.salesRepository.getAdvisorsRanking(prevFilters, 0);
 
