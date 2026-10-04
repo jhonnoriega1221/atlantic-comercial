@@ -5,7 +5,7 @@ export interface MainNavigationItem {
 }
 
 export const mainNavigationItemsData: MainNavigationItem[] = [
-  { icon: "lucideLayoutDashboard", title: "Dashboard", url: "/" },
+  { icon: "lucideLayoutDashboard", title: "Resumen", url: "/" },
   { icon: "lucideUser2", title: "Asesores", url: "/advisors" },
   { icon: "lucideStore", title: "Clientes", url: "/clients" }
 ];
