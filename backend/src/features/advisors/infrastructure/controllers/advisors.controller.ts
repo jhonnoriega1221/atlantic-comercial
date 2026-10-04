@@ -5,7 +5,7 @@ import { AdvisorsService } from "../../application/services/advisors.service.js"
 import { AdvisorFilterDto } from "../../domain/dto/advisor-filter.dto.js";
 
 @ApiTags("Asesores")
-@Controller("asesores")
+@Controller("advisors")
 export class AdvisorsController {
   constructor(private readonly advisorsService: AdvisorsService) {}
 
