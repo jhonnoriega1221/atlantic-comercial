@@ -70,4 +70,30 @@ export class SalesController {
   async getLocationsRanking(@Query() filters: SalesFilterDto) {
     return await this.salesService.getLocationsRanking(filters);
   }
+
+  @Get("advisors")
+  @ApiOperation({
+    summary: "Ranking de los 10 mejores asesores",
+    description:
+      "Retorna el Top 10 de asesores basado en Venta Neta, incluyendo Ticket Promedio, Clientes y Variación vs mes anterior."
+  })
+  @ApiResponse({
+    status: 200,
+    description: "Ranking generado correctamente.",
+    schema: {
+      example: [
+        {
+          advisorCode: "ASE-045",
+          advisorName: "Maria Rodriguez",
+          netSale: 45000000,
+          activeClients: 120,
+          averageTicket: 375000,
+          salesVariationMoM: 12.5
+        }
+      ]
+    }
+  })
+  async getAdvisorsRanking(@Query() filters: SalesFilterDto) {
+    return await this.salesService.getAdvisorsRanking(filters);
+  }
 }

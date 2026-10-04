@@ -67,4 +67,32 @@ export class SalesService {
       participation: totalSales > 0 ? (item.netSale / totalSales) * 100 : 0
     }));
   }
+
+  async getAdvisorsRanking(filters: SalesFilterDto) {
+    const currentRanking = await this.salesRepository.getAdvisorsRanking(filters, 10);
+
+    if (currentRanking.length === 0) return [];
+
+    const prevFilters = this.calculatePreviousMonthFilter(filters);
+
+    const prevData = await this.salesRepository.getAdvisorsRanking(prevFilters, 0);
+
+    return currentRanking.map((current) => {
+      const prev = prevData.find((p) => p.advisorCode === current.advisorCode);
+      const prevSale = prev ? prev.netSale : 0;
+
+      const salesVariationMoM = prevSale > 0 ? ((current.netSale - prevSale) / prevSale) * 100 : 0;
+
+      const averageTicket = current.transactions > 0 ? current.netSale / current.transactions : 0;
+
+      return {
+        advisorCode: current.advisorCode,
+        advisorName: current.advisorName,
+        netSale: current.netSale,
+        activeClients: current.activeClients,
+        averageTicket,
+        salesVariationMoM
+      };
+    });
+  }
 }
