@@ -1,0 +1,19 @@
+.layout-shell {
+  display: flex;
+  min-height: 100vh;
+  padding-top: 24px;
+  padding-bottom: calc(var(--bottombar-height) + var(--bottombar-padding) + 24px);
+}
+
+.main-container {
+  width: calc(100vw - var(--sidebar-padding) - var(--sidebar-width) - 100%);
+  flex: 1;
+}
+
+@media (min-width: 640px) {
+  .layout-shell {
+    padding-left: calc(var(--sidebar-width) + var(--sidebar-padding));
+    padding-top: 32px;
+    padding-bottom: 24px;
+  }
+}
