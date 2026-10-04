@@ -1,0 +1,18 @@
+.animate-greeting {
+  animation: greeting-sequence 1.8s ease-in-out forwards;
+}
+
+@keyframes greeting-sequence {
+  0% {
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
