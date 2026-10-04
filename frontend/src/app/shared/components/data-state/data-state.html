@@ -1,0 +1,35 @@
+<div
+  class="animate-in fade-in flex flex-col items-center justify-center p-8 text-center duration-300"
+>
+  @if (imageUrl()) {
+    <img
+      [src]="imageUrl()"
+      [alt]="title()"
+      class="pointer-events-none mb-6 h-48 w-48 object-contain"
+    />
+  } @else {
+    <div class="bg-muted/50 mb-6 flex h-24 w-24 items-center justify-center rounded-full">
+      @if (type() === "error") {
+        <ng-icon class="text-destructive" name="lucideAlertCircle" size="60" />
+      } @else {
+        <ng-icon name="lucideListX" size="60" />
+      }
+    </div>
+  }
+
+  <h3 class="text-foreground text-xl font-semibold tracking-tight">
+    {{ titleMessage() }}
+  </h3>
+
+  @if (descriptionMessage()) {
+    <p class="text-muted-foreground mt-2 max-w-sm text-sm">
+      {{ descriptionMessage() }}
+    </p>
+  }
+
+  @if (buttonLabel() && action) {
+    <button hlmBtn size="lg" class="mt-6 px-4" (click)="action.emit()">
+      {{ buttonLabel() }}
+    </button>
+  }
+</div>
