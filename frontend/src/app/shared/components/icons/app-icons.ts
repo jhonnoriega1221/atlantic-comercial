@@ -31,7 +31,13 @@ import {
   lucideUser2,
   lucideStore,
   lucideRefreshCcw,
-  lucideListX
+  lucideListX,
+  lucideShoppingBag,
+  lucideDollarSign,
+  lucideTrendingUp,
+  lucideCreditCard,
+  lucideUsers,
+  lucideRotateCcw
 } from "@ng-icons/lucide";
 
 export const APP_ICONS = {
@@ -67,5 +73,11 @@ export const APP_ICONS = {
   lucideUser2,
   lucideStore,
   lucideRefreshCcw,
-  lucideListX
+  lucideListX,
+  lucideShoppingBag,
+  lucideDollarSign,
+  lucideTrendingUp,
+  lucideCreditCard,
+  lucideUsers,
+  lucideRotateCcw
 } as const;

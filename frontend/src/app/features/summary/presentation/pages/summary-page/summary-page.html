@@ -1,1 +1,101 @@
-<p>summary-page works!</p>
+<main class="mx-auto max-w-7xl space-y-10 px-4 py-3">
+  @if (facade.isLoading()) {
+    <app-summary-skeleton />
+  } @else if (facade.error()) {
+    <div class="flex min-h-[400px] items-center justify-center">
+      <app-data-state type="error" (action)="facade.loadDashboard()"> </app-data-state>
+    </div>
+  } @else if (facade.kpis()) {
+    <header>
+      <app-home-greeting />
+    </header>
+    <div class="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-12">
+      <!-- Venta Neta Total -->
+      <section
+        class="bg-card group relative col-span-1 flex flex-col justify-between overflow-hidden rounded-xl border p-6 shadow-sm sm:col-span-2 lg:col-span-6"
+      >
+        <app-net-sales-card [kpis]="facade.kpis()" />
+      </section>
+
+      <!-- Ticket promedio -->
+      <section
+        class="bg-card col-span-1 rounded-xl border p-5 shadow-sm sm:col-span-1 lg:col-span-3"
+      >
+        <app-kpi-card
+          title="Ticket Promedio"
+          icon="lucideShoppingBag"
+          description="Valor medio por pedido"
+          [value]="
+            (facade.kpis()?.averageOrderValue | currency: 'COP' : 'symbol-narrow' : '1.0-0') ?? '$0'
+          "
+        />
+      </section>
+
+      <!-- Transacciones -->
+      <section
+        class="bg-card col-span-1 rounded-xl border p-5 shadow-sm sm:col-span-1 lg:col-span-3"
+      >
+        <app-kpi-card
+          title="Transacciones"
+          icon="lucideCreditCard"
+          description="Órdenes procesadas"
+          [value]="(facade.kpis().transactions | number) ?? '0'"
+        />
+      </section>
+
+      <!-- Clientes activos -->
+      <section
+        class="bg-card col-span-1 rounded-xl border p-5 shadow-sm sm:col-span-1 lg:col-span-3"
+      >
+        <app-kpi-card
+          title="Clientes Activos"
+          icon="lucideUsers"
+          description="Compradores únicos"
+          [value]="(facade.kpis().activeClients | number) ?? '0'"
+        />
+      </section>
+
+      <!-- Tasa de devolución -->
+      <section
+        class="bg-card col-span-1 rounded-xl border p-5 shadow-sm sm:col-span-1 lg:col-span-3"
+      >
+        <app-kpi-card
+          title="Tasa Devolución"
+          icon="lucideRotateCcw"
+          description="Porcentaje de retornos"
+          [value]="(facade.kpis().returnRate / 100 | percent: '1.1-2') ?? '0%'"
+        />
+      </section>
+
+      <!-- Tendencias de ventas -->
+      <section
+        class="bg-card col-span-1 flex min-h-[380px] flex-col justify-between rounded-xl border p-6 shadow-sm sm:col-span-2 lg:col-span-7"
+      >
+        <header class="mb-4">
+          <h3 class="text-lg font-semibold tracking-tight">Tendencia de Ventas</h3>
+          <p class="text-muted-foreground text-xs">Evolución mensual histórica</p>
+        </header>
+
+        <div class="min-h-[280px] w-full flex-1">
+          <!-- <app-trend-chart [data]="facade.trend()" /> -->
+        </div>
+      </section>
+
+      <!-- Venta por sede -->
+      <section
+        class="bg-card col-span-1 flex min-h-[380px] flex-col justify-between rounded-xl border p-6 shadow-sm sm:col-span-2 lg:col-span-5"
+      >
+        <header class="mb-4">
+          <h3 class="text-lg font-semibold tracking-tight">Ventas por Sede</h3>
+          <p class="text-muted-foreground text-xs">
+            Participación comercial por ubicación geográfica
+          </p>
+        </header>
+
+        <div class="w-full flex-1">
+          <!--<app-locations-ranking [data]="facade.locations()" /> -->
+        </div>
+      </section>
+    </div>
+  }
+</main>
