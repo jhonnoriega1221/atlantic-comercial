@@ -7,14 +7,14 @@ export class ClientsQueryDto {
   @IsOptional()
   @Type(() => Number)
   @IsNumber()
-  @Min(1)
+  @Min(1, { message: "La página no puede ser menor a 1" })
   page?: number = 1;
 
   @ApiPropertyOptional({ description: "Registros por página", default: 10 })
   @IsOptional()
   @Type(() => Number)
-  @IsNumber()
-  @Min(1)
+  @IsNumber({}, { message: "El límite debe ser un número" })
+  @Min(1, { message: "El límite no puede ser menor a 1" })
   limit?: number = 10;
 
   @ApiPropertyOptional({ description: "Término de búsqueda por nombre del cliente" })
@@ -24,7 +24,7 @@ export class ClientsQueryDto {
 
   @ApiPropertyOptional({ description: "Campo por el cual ordenar", enum: ["name", "netSale"] })
   @IsOptional()
-  @IsIn(["name", "netSale"])
+  @IsIn(["name", "netSale"], { message: "El ordenamiento solo puede ser por name o netSale" })
   sortBy?: string = "netSale";
 
   @ApiPropertyOptional({ description: "Dirección del ordenamiento", enum: ["ASC", "DESC"] })
