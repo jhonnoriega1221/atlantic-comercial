@@ -13,23 +13,69 @@ export class ClientRepository implements IClientRepository {
   ) {}
 
   async getPaginatedClients(query: ClientsQueryDto) {
-    const qb = this.repository.createQueryBuilder("c");
+    let baseSql = `
+      FROM dim_clientes c
+      LEFT JOIN fact_ventas v ON c.[Cod Cliente] = v.[Cod Principal]
+      LEFT JOIN rel_cliente_asesor r ON c.[Cod Cliente] = r.[Cod Cliente]
+      LEFT JOIN dim_asesores a ON r.[Cod Asesor] = a.[Cod Asesor]
+      WHERE 1=1
+    `;
+    const params: (string | number)[] = [];
+
     if (query.search) {
-      qb.andWhere("LOWER(c.clientName) LIKE LOWER(:search)", { search: "%${query.search}%" });
+      baseSql += ` AND LOWER(c.[Nombre Cliente]) LIKE LOWER(?)`;
+      params.push(`%${query.search}%`);
+    }
+    if (query.startDate) {
+      baseSql += ` AND v.Periodo >= ?`;
+      params.push(query.startDate);
+    }
+    if (query.endDate) {
+      baseSql += ` AND v.Periodo <= ?`;
+      params.push(query.endDate);
+    }
+    if (query.location) {
+      baseSql += ` AND a.Sede = ?`;
+      params.push(query.location.toUpperCase());
+    }
+    if (query.advisor) {
+      baseSql += ` AND a.[Cod Asesor] = ?`;
+      params.push(query.advisor);
     }
 
-    const total = await qb.getCount();
-
-    const sortBy = query.sortBy === "name" ? "c.clientName" : "c.netSale";
-    qb.orderBy(sortBy, query.sortOrder);
+    const countSql = `SELECT COUNT(DISTINCT c.[Cod Cliente]) as total ${baseSql}`;
+    const countResult = await this.repository.query(countSql, params);
+    const total = Number(countResult[0]?.total) || 0;
 
     const limit = query.limit || 10;
     const page = query.page || 1;
     const offset = (page - 1) * limit;
 
-    qb.limit(limit).offset(offset);
+    const sortBy = query.sortBy === "name" ? "c.[Nombre Cliente]" : "SUM(v.Neto)";
+    const order = query.sortOrder === "ASC" ? "ASC" : "DESC";
 
-    const data = await qb.getMany();
+    const dataSql = `
+      SELECT 
+        c.[Cod Cliente] as clientId,
+        c.[Nombre Cliente] as clientName,
+        COUNT(v.id) as transactions,
+        COALESCE(SUM(v.Neto), 0) as netSale
+      ${baseSql}
+      GROUP BY c.[Cod Cliente], c.[Nombre Cliente]
+      ORDER BY ${sortBy} ${order}
+      LIMIT ? OFFSET ?
+    `;
+
+    const dataParams = [...params, limit, offset];
+
+    interface RawClientRow {
+      clientId: string;
+      clientName: string;
+      transactions: number;
+      netSale: number;
+    }
+
+    const data = await this.repository.query<RawClientRow[]>(dataSql, dataParams);
 
     return {
       data: data.map((row) => ({
@@ -50,7 +96,7 @@ export class ClientRepository implements IClientRepository {
     const offset = (page - 1) * limit;
 
     let dateFilterSql = "";
-    const queryParams: string[] = [clientId];
+    const queryParams: (string | number)[] = [clientId];
 
     if (query.startDate) {
       dateFilterSql += " AND v.Periodo >= ?";
