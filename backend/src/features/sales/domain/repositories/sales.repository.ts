@@ -17,4 +17,11 @@ export interface ISalesRepository {
       transactions: number;
     }>
   >;
+
+  getSalesByLocation(filters: SalesFilterDto): Promise<
+    Array<{
+      location: string;
+      netSale: number;
+    }>
+  >;
 }

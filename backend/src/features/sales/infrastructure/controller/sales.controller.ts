@@ -50,4 +50,24 @@ export class SalesController {
   async getSalesTrend(@Query() filters: SalesFilterDto) {
     return await this.salesService.getSalesTrend(filters);
   }
+
+  @Get("sedes")
+  @ApiOperation({
+    summary: "Rendimiento y participación por sede",
+    description:
+      "Retorna el total de ventas y el % de participación agrupado por cada sede comercial."
+  })
+  @ApiResponse({
+    status: 200,
+    description: "Ranking de sedes calculado correctamente.",
+    schema: {
+      example: [
+        { sede: "BOGOTA", netSale: 52000000.5, participation: 35.5 },
+        { sede: "MEDELLIN", netSale: 31000000.0, participation: 21.2 }
+      ]
+    }
+  })
+  async getLocationsRanking(@Query() filters: SalesFilterDto) {
+    return await this.salesService.getLocationsRanking(filters);
+  }
 }

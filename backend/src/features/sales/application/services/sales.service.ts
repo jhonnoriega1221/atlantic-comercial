@@ -55,4 +55,16 @@ export class SalesService {
 
     return previousFilter;
   }
+
+  async getLocationsRanking(filters: SalesFilterDto) {
+    const data = await this.salesRepository.getSalesByLocation(filters);
+
+    const totalSales = data.reduce((acc, current) => acc + current.netSale, 0);
+
+    return data.map((item) => ({
+      location: item.location,
+      netSale: item.netSale,
+      participation: totalSales > 0 ? (item.netSale / totalSales) * 100 : 0
+    }));
+  }
 }

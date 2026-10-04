@@ -66,4 +66,21 @@ export class SalesRepository implements ISalesRepository {
       transactions: Number(row.transactions) || 0
     }));
   }
+
+  async getSalesByLocation(filters: SalesFilterDto) {
+    const qb = this.repository.createQueryBuilder("v");
+    this.applyFilters(qb, filters);
+
+    const result = await qb
+      .select("v.location", "location")
+      .addSelect("SUM(v.netSale)", "netSale")
+      .groupBy("v.location")
+      .orderBy("netSale", "DESC")
+      .getRawMany();
+
+    return result.map((row) => ({
+      location: row.location,
+      netSale: Number(row.netSale) || 0
+    }));
+  }
 }
