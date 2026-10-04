@@ -1,14 +1,13 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
-import type { IClientRepository } from "../../domain/repositories/client.repository.js";
-import { I_CLIENTS_REPOSITORY } from "../../domain/repositories/client.repository.js";
+import { ClientRepository } from "../../domain/repositories/client.repository.js";
 import { ClientsQueryDto } from "../../domain/dto/client-query.dto.js";
 import { ClientHistoryQueryDto } from "../../domain/dto/client-history-query.dto.js";
 
 @Injectable()
 export class ClientService {
   constructor(
-    @Inject(I_CLIENTS_REPOSITORY)
-    private readonly clientRepository: IClientRepository
+    @Inject(ClientRepository)
+    private readonly clientRepository: ClientRepository
   ) {}
 
   async getClientHistory(clientId: string, query: ClientHistoryQueryDto) {

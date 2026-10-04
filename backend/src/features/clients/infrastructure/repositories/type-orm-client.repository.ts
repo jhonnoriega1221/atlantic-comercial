@@ -2,11 +2,11 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { ClientsQueryDto } from "../../domain/dto/client-query.dto.js";
 import { ClientSummaryEntity } from "../../domain/entities/client-summary.entity.js";
-import { IClientRepository } from "../../domain/repositories/client.repository.js";
+import { ClientRepository } from "../../domain/repositories/client.repository.js";
 import { ClientHistoryQueryDto } from "../../domain/dto/client-history-query.dto.js";
 import { ClientHistoryItem } from "../../domain/types/client.types.js";
 
-export class ClientRepository implements IClientRepository {
+export class TypeOrmClientRepository implements ClientRepository {
   constructor(
     @InjectRepository(ClientSummaryEntity)
     private readonly repository: Repository<ClientSummaryEntity>
