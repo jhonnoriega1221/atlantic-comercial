@@ -1,1 +1,33 @@
-<p>clients-page works!</p>
+<main class="mx-auto max-w-7xl space-y-4 px-4 py-3">
+  <h1 class="text-xl font-semibold tracking-tight">Clientes</h1>
+
+  <input
+    hlmInput
+    class="w-full md:w-80"
+    placeholder="Buscar por nombre..."
+    [value]="facade.filters().search"
+    (input)="search$.next($any($event.target).value)"
+  />
+
+  @if (facade.isLoading()) {
+    <div class="space-y-2">
+      @for (i of [1, 2, 3, 4, 5]; track i) {
+        <div class="bg-muted h-12 animate-pulse rounded-md"></div>
+      }
+    </div>
+  } @else if (facade.error()) {
+    <app-data-state type="error" (action)="facade.retry()" />
+  } @else {
+    <app-clients-table
+      [data]="facade.clients()"
+      [rowCount]="facade.total()"
+      [page]="facade.filters().page"
+      [limit]="facade.filters().limit"
+      [sortBy]="facade.filters().sortBy"
+      [sortOrder]="facade.filters().sortOrder"
+      [isFetching]="facade.isFetching()"
+      (pageChange)="facade.setPage($event)"
+      (sortChange)="facade.setSort($event)"
+    />
+  }
+</main>
