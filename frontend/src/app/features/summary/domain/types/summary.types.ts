@@ -3,7 +3,9 @@ export interface KpisResult {
 }
 
 export interface TrendItem {
-  result: string;
+  period: string;
+  netSale: number;
+  transactions: number;
 }
 
 export interface LocationItem {

@@ -8,8 +8,7 @@ import { KpiCard } from "../../components/kpi-card/kpi-card";
 import { NetSalesCard } from "../../components/net-sales-card/net-sales-card";
 import { HomeGreeting } from "../../components/home-greeting/home-greeting";
 import { SummarySkeleton } from "../../components/summary-skeleton/summary-skeleton";
-// import { TrendChartComponent } from '../../components/trend-chart/trend-chart.component';
-// import { LocationsRankingComponent } from '../../components/locations-ranking/locations-ranking.component';
+import { TrendChart } from "../../components/trend-chart/trend-chart";
 
 @Component({
   selector: "app-summary-page",
@@ -22,7 +21,8 @@ import { SummarySkeleton } from "../../components/summary-skeleton/summary-skele
     KpiCard,
     NetSalesCard,
     HomeGreeting,
-    SummarySkeleton
+    SummarySkeleton,
+    TrendChart
   ],
   providers: [provideIcons({})],
   templateUrl: "./summary-page.html"

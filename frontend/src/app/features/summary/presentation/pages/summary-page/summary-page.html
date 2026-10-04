@@ -71,14 +71,7 @@
       <section
         class="bg-card col-span-1 flex min-h-[380px] flex-col justify-between rounded-xl border p-6 shadow-sm sm:col-span-2 lg:col-span-7"
       >
-        <header class="mb-4">
-          <h3 class="text-lg font-semibold tracking-tight">Tendencia de Ventas</h3>
-          <p class="text-muted-foreground text-xs">Evolución mensual histórica</p>
-        </header>
-
-        <div class="min-h-[280px] w-full flex-1">
-          <!-- <app-trend-chart [data]="facade.trend()" /> -->
-        </div>
+        <app-trend-chart [data]="facade.trend()" />
       </section>
 
       <!-- Venta por sede -->
