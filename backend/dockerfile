@@ -11,6 +11,6 @@ ENV NODE_ENV=production
 COPY backend/package*.json ./
 RUN npm ci --omit=dev
 COPY --from=build /app/dist ./dist
-# TODO: Cuando cree base de datos: COPY db/atlantic.db ./db/atlantic.db
+COPY db/afs_commercial.sqlite ./db/afs_commercial.sqlite
 EXPOSE 3000
 CMD ["node", "dist/main.js"]
