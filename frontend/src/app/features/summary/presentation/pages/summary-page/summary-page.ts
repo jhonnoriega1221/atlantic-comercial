@@ -9,6 +9,7 @@ import { NetSalesCard } from "../../components/net-sales-card/net-sales-card";
 import { HomeGreeting } from "../../components/home-greeting/home-greeting";
 import { SummarySkeleton } from "../../components/summary-skeleton/summary-skeleton";
 import { TrendChart } from "../../components/trend-chart/trend-chart";
+import { LocationsRanking } from "../../components/locations-ranking/locations-ranking";
 
 @Component({
   selector: "app-summary-page",
@@ -22,7 +23,8 @@ import { TrendChart } from "../../components/trend-chart/trend-chart";
     NetSalesCard,
     HomeGreeting,
     SummarySkeleton,
-    TrendChart
+    TrendChart,
+    LocationsRanking
   ],
   providers: [provideIcons({})],
   templateUrl: "./summary-page.html"

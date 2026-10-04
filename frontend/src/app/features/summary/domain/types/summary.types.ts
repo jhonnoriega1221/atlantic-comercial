@@ -9,5 +9,7 @@ export interface TrendItem {
 }
 
 export interface LocationItem {
-  result: string;
+  location: string;
+  netSale: number;
+  participation: number;
 }
