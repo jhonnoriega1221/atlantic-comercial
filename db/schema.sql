@@ -98,3 +98,8 @@ GROUP BY c.[Cod Cliente], c.[Nombre Cliente];
 CREATE INDEX idx_fact_periodo ON fact_ventas(Periodo);
 CREATE INDEX idx_fact_cliente ON fact_ventas([Cod Principal]);
 CREATE INDEX idx_fact_material ON fact_ventas([Cod Material]);
+CREATE INDEX IF NOT EXISTS idx_fact_ventas_periodo ON fact_ventas(Periodo);
+CREATE INDEX IF NOT EXISTS idx_fact_ventas_cliente ON fact_ventas([Cod Principal]);
+CREATE INDEX IF NOT EXISTS idx_fact_ventas_material ON fact_ventas([Cod Material]);
+CREATE INDEX IF NOT EXISTS idx_rel_cliente_asesor ON rel_cliente_asesor([Cod Cliente], [Cod Asesor]);
+CREATE INDEX IF NOT EXISTS idx_dim_asesores_sede ON dim_asesores(Sede);
