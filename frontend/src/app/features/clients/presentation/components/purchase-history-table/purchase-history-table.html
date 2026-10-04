@@ -1,0 +1,94 @@
+<div class="overflow-hidden rounded-md border transition-opacity" [class.opacity-60]="isFetching()">
+  <div hlmTableContainer>
+    <table hlmTable>
+      <thead hlmTHead>
+        @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
+          <tr hlmTr>
+            @for (header of headerGroup.headers; track header.id) {
+              <th hlmTh [attr.colSpan]="header.colSpan">
+                @if (!header.isPlaceholder) {
+                  <ng-container
+                    *flexRender="
+                      header.column.columnDef.header;
+                      props: header.getContext();
+                      let headerText
+                    "
+                  >
+                    <div [innerHTML]="headerText"></div>
+                  </ng-container>
+                }
+              </th>
+            }
+          </tr>
+        }
+      </thead>
+      <tbody hlmTBody>
+        @for (row of table.getRowModel().rows; track row.id) {
+          <tr hlmTr>
+            @for (cell of row.getVisibleCells(); track cell.id) {
+              <td hlmTd>
+                <ng-container
+                  *flexRender="cell.column.columnDef.cell; props: cell.getContext(); let cellText"
+                >
+                  <div [innerHTML]="cellText"></div>
+                </ng-container>
+              </td>
+            }
+          </tr>
+        } @empty {
+          <tr hlmTr>
+            <td hlmTd class="h-24 text-center" [attr.colspan]="3">
+              Este cliente no tiene compras registradas.
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="flex flex-col items-center justify-between gap-3 py-4 sm:flex-row">
+  <p class="text-muted-foreground text-sm">
+    {{ rowCount() | number }} registros · Página {{ page() }} de {{ pageCount() }}
+  </p>
+  <div class="flex gap-2">
+    <button
+      hlmBtn
+      variant="outline"
+      size="icon-lg"
+      class="hidden sm:inline-flex"
+      [disabled]="!table.getCanPreviousPage()"
+      (click)="table.firstPage()"
+    >
+      <ng-icon name="lucideChevronsLeft" />
+    </button>
+    <button
+      hlmBtn
+      variant="outline"
+      size="icon-lg"
+      [disabled]="!table.getCanPreviousPage()"
+      (click)="table.previousPage()"
+    >
+      <ng-icon name="lucideChevronLeft" />
+    </button>
+    <button
+      hlmBtn
+      variant="outline"
+      size="icon-lg"
+      [disabled]="!table.getCanNextPage()"
+      (click)="table.nextPage()"
+    >
+      <ng-icon name="lucideChevronRight" />
+    </button>
+    <button
+      hlmBtn
+      variant="outline"
+      size="icon-lg"
+      class="hidden sm:inline-flex"
+      [disabled]="!table.getCanNextPage()"
+      (click)="table.lastPage()"
+    >
+      <ng-icon name="lucideChevronsRight" />
+    </button>
+  </div>
+</div>

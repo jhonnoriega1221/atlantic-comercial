@@ -1,1 +1,33 @@
-<p>client-details-page works!</p>
+<main class="mx-auto max-w-7xl space-y-4 px-4 py-3">
+  <button hlmBtn variant="ghost" size="sm" class="-ml-2" (click)="back()">
+    <ng-icon name="lucideArrowLeft" />
+    Volver a clientes
+  </button>
+
+  @if (facade.isLoading()) {
+    <div class="space-y-2">
+      <div class="bg-muted h-8 w-64 animate-pulse rounded-md"></div>
+      @for (i of [1, 2, 3, 4, 5]; track i) {
+        <div class="bg-muted h-12 animate-pulse rounded-md"></div>
+      }
+    </div>
+  } @else if (facade.error()) {
+    <app-data-state type="error" (action)="facade.retry()" />
+  } @else {
+    <header>
+      <h1 class="text-xl font-semibold tracking-tight">{{ facade.clientName() }}</h1>
+      <p class="text-muted-foreground text-sm">
+        Cliente {{ facade.clientId$() }} · Historial de compras
+      </p>
+    </header>
+
+    <app-purchase-history-table
+      [data]="facade.items()"
+      [rowCount]="facade.total()"
+      [page]="facade.page()"
+      [limit]="facade.limit"
+      [isFetching]="facade.isFetching()"
+      (pageChange)="facade.setPage($event)"
+    />
+  }
+</main>
