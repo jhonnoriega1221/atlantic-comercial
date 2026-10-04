@@ -80,6 +80,21 @@ def data_ingestion():
         LEFT JOIN dim_asesores a ON r.[Cod Asesor] = a.[Cod Asesor]
         GROUP BY v.Periodo, a.Sede, a.[Cod Asesor], a.[Nombre Asesor];
     """)
+    
+    # Crear vista para el resumen de compras de los clientes
+    cursor.execute("DROP VIEW IF EXISTS view_clientes_resumen;")
+    cursor.execute("""
+        CREATE VIEW view_clientes_resumen AS
+        SELECT 
+            c.[Cod Cliente],
+            c.[Nombre Cliente],
+            COUNT(v.id) AS Transacciones,
+            SUM(v.Neto) AS Venta_Neta
+        FROM dim_clientes c
+        LEFT JOIN fact_ventas v ON c.[Cod Cliente] = v.[Cod Principal]
+        GROUP BY c.[Cod Cliente], c.[Nombre Cliente];
+    """)
+    
     conn.commit()
     conn.close()
     

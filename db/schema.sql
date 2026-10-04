@@ -64,6 +64,18 @@ CREATE TABLE fact_ventas (
     FOREIGN KEY ([Cod Material]) REFERENCES dim_materiales([Cod Material])
 );
 
+--- Vistas:
+-- Vista para el listado y ranking de clientes
+CREATE VIEW view_clientes_resumen AS
+SELECT 
+    c.[Cod Cliente],
+    c.[Nombre Cliente],
+    COUNT(v.id) AS Transacciones,
+    SUM(v.Neto) AS Venta_Neta
+    FROM dim_clientes c
+    LEFT JOIN fact_ventas v ON c.[Cod Cliente] = v.[Cod Principal]
+    GROUP BY c.[Cod Cliente], c.[Nombre Cliente];
+
 -- Indices:
 CREATE INDEX idx_fact_periodo ON fact_ventas(Periodo);
 CREATE INDEX idx_fact_cliente ON fact_ventas([Cod Principal]);
