@@ -1,0 +1,46 @@
+import { InjectRepository } from "@nestjs/typeorm";
+import { ISalesRepository } from "../../domain/repositories/sales.repository.js";
+import { AggregatedSalesEntity } from "../../domain/entities/aggregated-sales.entity.js";
+import { Repository } from "typeorm";
+import { SalesFilterDto } from "../../domain/dto/sales-filter.dto.js";
+
+export class SalesRepository implements ISalesRepository {
+  constructor(
+    @InjectRepository(AggregatedSalesEntity)
+    private readonly repository: Repository<AggregatedSalesEntity>
+  ) {}
+
+  async getAggregated(filters: SalesFilterDto) {
+    const qb = this.repository.createQueryBuilder("v");
+
+    if (filters.startDate) {
+      qb.andWhere("v.period >= :startDate", { startDate: filters.startDate });
+    }
+
+    if (filters.endDate) {
+      qb.andWhere("v.period <= :endDate", { endDate: filters.endDate });
+    }
+
+    if (filters.location) {
+      qb.andWhere("v.location = :location", { location: filters.location.toUpperCase() });
+    }
+
+    if (filters.advisor) {
+      qb.andWhere("v.advisorCode = :advisor", { advisor: filters.advisor });
+    }
+
+    const result = await qb
+      .select("SUM(v.netSale)", "netSale")
+      .addSelect("SUM(v.transactions)", "transactions")
+      .addSelect("SUM(v.activeClients)", "activeClients")
+      .addSelect("SUM(v.returns)", "returns")
+      .getRawOne();
+
+    return {
+      netSale: Number(result.netSale) || 0,
+      transactions: Number(result.transactions) || 0,
+      activeClients: Number(result.activeClients) || 0,
+      returns: Number(result.returns) || 0
+    };
+  }
+}
