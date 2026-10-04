@@ -27,7 +27,8 @@
       "@spartan-ng/helm/separator": ["./libs/ui/separator/src/index.ts"],
       "@spartan-ng/helm/table": ["./libs/ui/table/src/index.ts"],
       "@spartan-ng/helm/utils": ["./libs/ui/utils/src/index.ts"],
-      "@spartan-ng/helm/textarea": ["./libs/ui/textarea/src/index.ts"]
+      "@spartan-ng/helm/textarea": ["./libs/ui/textarea/src/index.ts"],
+      "@spartan-ng/helm/skeleton": ["./libs/ui/skeleton/src/index.ts"]
     }
   },
   "angularCompilerOptions": {
