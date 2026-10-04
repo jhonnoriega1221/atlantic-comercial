@@ -11,7 +11,7 @@ export class SalesService {
   ) {}
 
   async getGeneralKPIs(filters: SalesFilterDto) {
-    const current = await this.salesRepository.getAggregated(filters);
+    const current = await this.salesRepository.getGeneralKpis(filters);
 
     const averageOrderValue = current.transactions > 0 ? current.netSale / current.transactions : 0;
 
@@ -19,7 +19,7 @@ export class SalesService {
       current.netSale > 0 ? (Math.abs(current.returns) / current.netSale) * 100 : 0;
 
     const previousFilter = this.calculatePreviousMonthFilter(filters);
-    const previous = await this.salesRepository.getAggregated(previousFilter);
+    const previous = await this.salesRepository.getGeneralKpis(previousFilter);
 
     const salesGrowthRate =
       previous.netSale > 0 ? ((current.netSale - previous.netSale) / previous.netSale) * 100 : 0;
@@ -32,6 +32,10 @@ export class SalesService {
       returnRate,
       salesVariationMoM: salesGrowthRate
     };
+  }
+
+  async getSalesTrend(filters: SalesFilterDto) {
+    return await this.salesRepository.getSalesTrend(filters);
   }
 
   private calculatePreviousMonthFilter(filters: SalesFilterDto): SalesFilterDto {

@@ -31,4 +31,23 @@ export class SalesController {
   async getGeneralKpis(@Query() filters: SalesFilterDto) {
     return await this.salesService.getGeneralKPIs(filters);
   }
+
+  @Get("trend")
+  @ApiOperation({
+    summary: "Obtener tendencia de ventas en el tiempo",
+    description: "Retorna el comportamiento histórico de las ventas agrupado por meses."
+  })
+  @ApiResponse({
+    status: 200,
+    description: "Tendencia generada correctamente.",
+    schema: {
+      example: [
+        { period: "2026-01-01", netSale: 2500000, transactions: 150 },
+        { period: "2026-02-01", netSale: 2800000, transactions: 165 }
+      ]
+    }
+  })
+  async getSalesTrend(@Query() filters: SalesFilterDto) {
+    return await this.salesService.getSalesTrend(filters);
+  }
 }
