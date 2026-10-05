@@ -3,13 +3,17 @@ import { Observable } from "rxjs";
 import { AdvisorRankingItem } from "../../domain/types/advisor.types";
 import { HttpAdapter } from "../../../../core/http/http.adapter";
 import { TrendItem } from "../../../summary/domain/types/summary.types";
+import { GlobalFilters } from "../../../../shared/global-filters/global-filters.types";
+import { toGlobalParams } from "../../../../shared/global-filters/global-filters.params";
 
 @Injectable({ providedIn: "root" })
 export class AdvisorsRepository {
   private readonly http = inject(HttpAdapter);
 
-  getRanking(): Observable<AdvisorRankingItem[]> {
-    return this.http.get<AdvisorRankingItem[]>("/advisors/ranking");
+  getRanking(filters: GlobalFilters = {}): Observable<AdvisorRankingItem[]> {
+    return this.http.get<AdvisorRankingItem[]>("/advisors/ranking", {
+      params: toGlobalParams(filters)
+    });
   }
 
   getEvolution(code: string): Observable<TrendItem[]> {

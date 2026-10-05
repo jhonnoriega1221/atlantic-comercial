@@ -2,13 +2,14 @@ import { map, Observable } from "rxjs";
 import { AdvisorRankingItem, LocationRanking } from "../types/advisor.types";
 import { inject, Injectable } from "@angular/core";
 import { AdvisorsRepository } from "../../data/repositories/advisors.repository";
+import { GlobalFilters } from "../../../../shared/global-filters/global-filters.types";
 
 @Injectable({ providedIn: "root" })
 export class GetAdvisorsRankingUseCase {
   private readonly repository = inject(AdvisorsRepository);
 
-  execute(): Observable<LocationRanking[]> {
-    return this.repository.getRanking().pipe(map(groupByLocation));
+  execute(filters: GlobalFilters = {}): Observable<LocationRanking[]> {
+    return this.repository.getRanking(filters).pipe(map(groupByLocation));
   }
 }
 
