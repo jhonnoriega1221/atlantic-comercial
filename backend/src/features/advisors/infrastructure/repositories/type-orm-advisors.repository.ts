@@ -4,13 +4,13 @@ import { AdvisorAggregate, MonthlyEvolution } from "../../domain/types/advisor.t
 import { Repository } from "typeorm";
 import { AggregatedSalesEntity } from "../../../sales/domain/entities/aggregated-sales.entity.js";
 import { AdvisorsRepository } from "../../domain/repositories/advisors.repository.js";
-import { applySalesFilters } from "../../../../shared/infrastructure/repository/global-filter.utils.js";
+import { applySalesFilters } from "../../../../shared/utils/global-filter.utils.js";
 import { AdvisorFilterDto } from "../../domain/dto/advisor-filter.dto.js";
 
 @Injectable()
 export class TypeOrmAdvisorsRepository implements AdvisorsRepository {
   constructor(
-    @InjectRepository(AggregatedSalesEntity) // usa el nombre real de tu entidad de view_ventas_agregadas
+    @InjectRepository(AggregatedSalesEntity)
     private readonly repository: Repository<AggregatedSalesEntity>
   ) {}
 
@@ -56,5 +56,13 @@ export class TypeOrmAdvisorsRepository implements AdvisorsRepository {
       netSale: Number(row.netSale) || 0,
       transactions: Number(row.transactions) || 0
     }));
+  }
+
+  async getLatestPeriod(): Promise<string | null> {
+    const row = await this.repository
+      .createQueryBuilder("v")
+      .select("MAX(v.period)", "latest")
+      .getRawOne();
+    return row?.latest ?? null; // "2026-06-01"
   }
 }

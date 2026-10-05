@@ -8,6 +8,6 @@ export class AdvisorRankingDto {
   @ApiProperty({ description: "Promedio mensual de clientes activos en el rango" })
   activeClients: number;
   @ApiProperty() averageTicket: number;
-  @ApiProperty({ description: "Variación de venta vs. mes anterior, en %" })
-  salesVariationMoM: number;
+  @ApiProperty({ nullable: true, description: "Variación de venta vs. mes anterior, en %" })
+  salesVariationMoM: number | null;
 }

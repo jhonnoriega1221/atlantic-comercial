@@ -1,3 +1,3 @@
-import { GlobalFilterDto } from "../../../../shared/application/dtos/global-filter.dto.js";
+import { GlobalFilterDto } from "../../../../shared/utils/global-filter.dto.js";
 
 export class SalesFilterDto extends GlobalFilterDto {}

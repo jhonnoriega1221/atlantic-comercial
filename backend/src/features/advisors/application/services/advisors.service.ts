@@ -2,8 +2,8 @@ import { Injectable } from "@nestjs/common";
 import { AdvisorsRepository } from "../../domain/repositories/advisors.repository.js";
 import { AdvisorRankingDto } from "../../domain/dto/advisor-ranking.dto.js";
 import { MonthlyEvolution } from "../../domain/types/advisor.types.js";
-import { calculatePreviousMonthFilter } from "../../../../shared/application/dtos/utils.services.js";
 import { AdvisorFilterDto } from "../../domain/dto/advisor-filter.dto.js";
+import { getLastTwoMonthsFilters } from "../../../../shared/utils/period.js";
 
 @Injectable()
 export class AdvisorsService {
@@ -13,15 +13,24 @@ export class AdvisorsService {
     const current = await this.advisorsRepository.getRanking(filters);
     if (current.length === 0) return [];
 
-    const previous = await this.advisorsRepository.getRanking(
-      calculatePreviousMonthFilter(filters)
+    const months = getLastTwoMonthsFilters(
+      filters,
+      await this.advisorsRepository.getLatestPeriod()
     );
-    const previousSales = new Map(
-      previous.map((p) => [`${p.advisorCode}|${p.location}`, p.netSale])
-    );
+    const [lastMonth, previousMonth] = months
+      ? await Promise.all([
+          this.advisorsRepository.getRanking(months.last),
+          this.advisorsRepository.getRanking(months.previous)
+        ])
+      : [[], []];
+
+    const key = (a: { advisorCode: string; location: string }) => `${a.advisorCode}|${a.location}`;
+    const lastSales = new Map(lastMonth.map((a) => [key(a), a.netSale]));
+    const previousSales = new Map(previousMonth.map((a) => [key(a), a.netSale]));
 
     return current.map((c) => {
-      const prevSale = previousSales.get(`${c.advisorCode}|${c.location}`) ?? 0;
+      const last = lastSales.get(key(c)) ?? 0;
+      const prev = previousSales.get(key(c)) ?? 0;
       return {
         advisorCode: c.advisorCode,
         advisorName: c.advisorName,
@@ -29,7 +38,7 @@ export class AdvisorsService {
         netSale: c.netSale,
         activeClients: c.activeClients,
         averageTicket: c.transactions > 0 ? c.netSale / c.transactions : 0,
-        salesVariationMoM: prevSale > 0 ? ((c.netSale - prevSale) / prevSale) * 100 : 0
+        salesVariationMoM: prev > 0 ? ((last - prev) / prev) * 100 : null
       };
     });
   }

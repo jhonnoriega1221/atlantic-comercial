@@ -23,16 +23,5 @@ export abstract class SalesRepository {
     }>
   >;
 
-  abstract getAdvisorsRanking(
-    filters: SalesFilterDto,
-    limit?: number
-  ): Promise<
-    Array<{
-      advisorCode: string;
-      advisorName: string;
-      netSale: number;
-      activeClients: number;
-      transactions: number;
-    }>
-  >;
+  abstract getLatestPeriod(): Promise<string | null>;
 }

@@ -1,7 +1,7 @@
 import { IsOptional, IsNumber, Min } from "class-validator";
 import { Type } from "class-transformer";
 import { ApiPropertyOptional } from "@nestjs/swagger";
-import { GlobalFilterDto } from "../../../../shared/application/dtos/global-filter.dto.js";
+import { GlobalFilterDto } from "../../../../shared/utils/global-filter.dto.js";
 
 export class ClientHistoryQueryDto extends GlobalFilterDto {
   @ApiPropertyOptional({ description: "Página actual del historial", default: 1 })

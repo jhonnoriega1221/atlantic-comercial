@@ -2,7 +2,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { AggregatedSalesEntity } from "../../domain/entities/aggregated-sales.entity.js";
 import { Repository } from "typeorm";
 import { SalesFilterDto } from "../../domain/dto/sales-filter.dto.js";
-import { applySalesFilters } from "../../../../shared/infrastructure/repository/global-filter.utils.js";
+import { applySalesFilters } from "../../../../shared/utils/global-filter.utils.js";
 
 export class TypeOrmSalesRepository implements TypeOrmSalesRepository {
   constructor(
@@ -65,31 +65,11 @@ export class TypeOrmSalesRepository implements TypeOrmSalesRepository {
     }));
   }
 
-  async getAdvisorsRanking(filters: SalesFilterDto, limit: number = 10) {
-    const qb = this.repository.createQueryBuilder("v");
-    applySalesFilters(qb, filters);
-
-    qb.select("v.advisorCode", "advisorCode")
-      .addSelect("v.advisorName", "advisorName")
-      .addSelect("SUM(v.netSale)", "netSale")
-      .addSelect("SUM(v.activeClients)", "activeClients")
-      .addSelect("SUM(v.transactions)", "transactions")
-      .groupBy("v.advisorCode")
-      .addGroupBy("v.advisorName")
-      .orderBy("netSale", "DESC");
-
-    if (limit > 0) {
-      qb.limit(limit);
-    }
-
-    const result = await qb.getRawMany();
-
-    return result.map((row) => ({
-      advisorCode: row.advisorCode,
-      advisorName: row.advisorName,
-      netSale: Number(row.netSale) || 0,
-      activeClients: Number(row.activeClients) || 0,
-      transactions: Number(row.transactions) || 0
-    }));
+  async getLatestPeriod(): Promise<string | null> {
+    const row = await this.repository
+      .createQueryBuilder("v")
+      .select("MAX(v.period)", "latest")
+      .getRawOne();
+    return row?.latest ?? null; // "2026-06-01"
   }
 }

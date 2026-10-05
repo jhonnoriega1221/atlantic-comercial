@@ -1,6 +1,6 @@
 import { SelectQueryBuilder } from "typeorm";
-import { AggregatedSalesEntity } from "../../../features/sales/domain/entities/aggregated-sales.entity.js";
-import { GlobalFilterDto } from "../../application/dtos/global-filter.dto.js";
+import { AggregatedSalesEntity } from "../../features/sales/domain/entities/aggregated-sales.entity.js";
+import { GlobalFilterDto } from "./global-filter.dto.js";
 
 export function applySalesFilters(
   qb: SelectQueryBuilder<AggregatedSalesEntity>,
