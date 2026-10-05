@@ -1,15 +1,15 @@
 import { inject, Injectable } from "@angular/core";
 import { AdvisorsRepository } from "../../data/repositories/advisors.repository";
-import { map, Observable } from "rxjs";
-import { AdvisorRankingItem } from "../types/advisor.types";
+import { map } from "rxjs";
+import { GlobalFilters } from "../../../../shared/global-filters/global-filters.types";
 
 @Injectable({ providedIn: "root" })
 export class GetAdvisorUseCase {
   private readonly repository = inject(AdvisorsRepository);
 
-  execute(code: string): Observable<AdvisorRankingItem | null> {
+  execute(code: string, range: GlobalFilters) {
     return this.repository
-      .getRanking()
+      .getRanking(range)
       .pipe(map((list) => list.find((a) => a.advisorCode === code) ?? null));
   }
 }

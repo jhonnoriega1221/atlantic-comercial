@@ -4,7 +4,7 @@
     Volver a asesores
   </button>
 
-  @if (facade.advisor().loading) {
+  @if (facade.advisor().loading && !facade.advisor().data) {
     <div class="space-y-4">
       <div class="bg-muted h-8 w-64 animate-pulse rounded-md"></div>
       <div class="bg-muted h-64 animate-pulse rounded-xl"></div>
@@ -12,116 +12,124 @@
   } @else if (facade.advisor().error) {
     <app-data-state type="error" (action)="facade.retry()" />
   } @else if (facade.advisor().data; as advisor) {
-    <header class="space-y-1">
-      <p class="text-muted-foreground text-xs">
-        {{ displayLocation(advisor.location) }} · {{ advisor.advisorCode }}
-      </p>
-      <h1 class="text-xl font-semibold tracking-tight">{{ advisor.advisorName }}</h1>
-      @if (advisor.salesVariationMoM !== null) {
-        <p class="flex items-baseline gap-2">
-          <span
-            class="text-sm font-medium tabular-nums"
-            [class]="
-              advisor.salesVariationMoM >= 0
-                ? 'text-emerald-600 dark:text-emerald-400'
-                : 'text-red-600 dark:text-red-400'
-            "
-          >
-            {{ formatPercent(advisor.salesVariationMoM) }}
-          </span>
-          <span class="text-muted-foreground text-xs">vs. mes anterior</span>
+    <div class="space-y-4 transition-opacity" [class.opacity-60]="facade.isRefreshing()">
+      <header class="space-y-1">
+        <p class="text-muted-foreground text-xs">
+          {{ displayLocation(advisor.location) }} · {{ advisor.advisorCode }}
         </p>
-      }
-    </header>
-
-    <div class="grid grid-cols-1 gap-4 lg:grid-cols-12">
-      <section class="bg-card rounded-xl border p-5 shadow-sm lg:col-span-4">
-        <app-kpi-card
-          title="Venta Neta"
-          icon="lucideCreditCard"
-          description="Total del período"
-          [value]="formatMillions(advisor.netSale)"
-        />
-      </section>
-      <section class="bg-card rounded-xl border p-5 shadow-sm lg:col-span-4">
-        <app-kpi-card
-          title="Ticket Promedio"
-          icon="lucideShoppingBag"
-          description="Valor medio por pedido"
-          [value]="cop.format(advisor.averageTicket)"
-        />
-      </section>
-      <section class="bg-card rounded-xl border p-5 shadow-sm lg:col-span-4">
-        <app-kpi-card
-          title="Clientes Activos"
-          icon="lucideUsers"
-          description="Promedio por mes"
-          [value]="int.format(advisor.activeClients)"
-        />
-      </section>
-
-      <section
-        class="bg-card flex min-h-[380px] flex-col rounded-xl border p-6 shadow-sm lg:col-span-7"
-      >
-        @if (facade.evolution().loading) {
-          <div class="bg-muted h-full min-h-[300px] animate-pulse rounded-md"></div>
-        } @else if (facade.evolution().error) {
-          <app-data-state type="error" (action)="facade.retry()" />
-        } @else if (facade.evolution().data?.length) {
-          <app-trend-chart [data]="facade.evolution().data!" />
-        } @else {
-          <p class="text-muted-foreground m-auto text-sm">Sin ventas en el período.</p>
+        <h1 class="text-xl font-semibold tracking-tight">{{ advisor.advisorName }}</h1>
+        @if (advisor.salesVariationMoM !== null) {
+          <p class="flex items-baseline gap-2">
+            <span
+              class="text-sm font-medium tabular-nums"
+              [class]="
+                advisor.salesVariationMoM >= 0
+                  ? 'text-emerald-600 dark:text-emerald-400'
+                  : 'text-red-600 dark:text-red-400'
+              "
+            >
+              {{ formatPercent(advisor.salesVariationMoM) }}
+            </span>
+            <span class="text-muted-foreground text-xs">vs. mes anterior</span>
+          </p>
         }
-      </section>
+      </header>
 
-      <section
-        class="bg-card flex min-h-[380px] flex-col rounded-xl border p-6 shadow-sm lg:col-span-5"
-      >
-        <header class="mb-2">
-          <h3 class="text-foreground text-base font-semibold tracking-tight">
-            Principales clientes
-          </h3>
-          <p class="text-muted-foreground text-xs">Los 5 con mayor venta neta</p>
-        </header>
+      <div class="grid grid-cols-1 gap-4 lg:grid-cols-12">
+        <section class="bg-card rounded-xl border p-5 shadow-sm lg:col-span-4">
+          <app-kpi-card
+            title="Venta Neta"
+            icon="lucideCreditCard"
+            description="Total del período"
+            [value]="formatMillions(advisor.netSale)"
+          />
+        </section>
+        <section class="bg-card rounded-xl border p-5 shadow-sm lg:col-span-4">
+          <app-kpi-card
+            title="Ticket Promedio"
+            icon="lucideShoppingBag"
+            description="Valor medio por pedido"
+            [value]="cop.format(advisor.averageTicket)"
+          />
+        </section>
+        <section class="bg-card rounded-xl border p-5 shadow-sm lg:col-span-4">
+          <app-kpi-card
+            title="Clientes Activos"
+            icon="lucideUsers"
+            description="Promedio por mes"
+            [value]="int.format(advisor.activeClients)"
+          />
+        </section>
 
-        @if (facade.topClients().loading) {
-          <div class="space-y-2">
-            @for (i of [1, 2, 3, 4, 5]; track i) {
-              <div class="bg-muted h-12 animate-pulse rounded-md"></div>
-            }
-          </div>
-        } @else if (facade.topClients().error) {
-          <app-data-state type="error" (action)="facade.retry()" />
-        } @else {
-          <ol class="divide-y">
-            @for (client of facade.topClients().data; track client.clientId; let i = $index) {
-              <li>
-                <a
-                  [routerLink]="['/clients', client.clientId]"
-                  class="hover:bg-muted/50 -mx-2 flex items-center gap-3 rounded-md px-2 py-3"
-                >
-                  <span class="text-muted-foreground w-5 text-sm tabular-nums">{{ i + 1 }}</span>
-                  <span class="min-w-0 flex-1">
-                    <span class="block truncate font-medium">{{ client.clientName }}</span>
-                    <span class="text-muted-foreground text-xs">
-                      {{ int.format(client.transactions) }} transacciones
+        <section
+          class="bg-card flex min-h-[380px] flex-col rounded-xl border p-6 shadow-sm lg:col-span-7"
+        >
+          @if (facade.evolution().loading && !facade.evolution().data) {
+            <div class="bg-muted h-full min-h-[300px] animate-pulse rounded-md"></div>
+          } @else if (facade.evolution().error) {
+            <app-data-state type="error" (action)="facade.retry()" />
+          } @else if (facade.evolution().data?.length) {
+            <app-trend-chart [data]="facade.evolution().data!" />
+          } @else {
+            <p class="text-muted-foreground m-auto text-sm">Sin ventas en el período.</p>
+          }
+        </section>
+
+        <section
+          class="bg-card flex min-h-[380px] flex-col rounded-xl border p-6 shadow-sm lg:col-span-5"
+        >
+          <header class="mb-2">
+            <h3 class="text-foreground text-base font-semibold tracking-tight">
+              Principales clientes
+            </h3>
+            <p class="text-muted-foreground text-xs">Los 5 con mayor venta neta</p>
+          </header>
+
+          @if (facade.topClients().loading && !facade.topClients().data) {
+            <div class="space-y-2">
+              @for (i of [1, 2, 3, 4, 5]; track i) {
+                <div class="bg-muted h-12 animate-pulse rounded-md"></div>
+              }
+            </div>
+          } @else if (facade.topClients().error) {
+            <app-data-state type="error" (action)="facade.retry()" />
+          } @else {
+            <ol class="divide-y">
+              @for (client of facade.topClients().data; track client.clientId; let i = $index) {
+                <li>
+                  <a
+                    [routerLink]="['/clients', client.clientId]"
+                    class="hover:bg-muted/50 -mx-2 flex items-center gap-3 rounded-md px-2 py-3"
+                  >
+                    <span class="text-muted-foreground w-5 text-sm tabular-nums">{{ i + 1 }}</span>
+                    <span class="min-w-0 flex-1">
+                      <span class="block truncate font-medium">{{ client.clientName }}</span>
+                      <span class="text-muted-foreground text-xs">
+                        {{ int.format(client.transactions) }} transacciones
+                      </span>
                     </span>
-                  </span>
-                  <span class="text-sm font-medium tabular-nums">{{
-                    formatMillions(client.netSale)
-                  }}</span>
-                </a>
-              </li>
-            } @empty {
-              <li class="text-muted-foreground py-6 text-center text-sm">
-                Sin clientes en el período.
-              </li>
-            }
-          </ol>
-        }
-      </section>
+                    <span class="text-sm font-medium tabular-nums">{{
+                      formatMillions(client.netSale)
+                    }}</span>
+                  </a>
+                </li>
+              } @empty {
+                <li class="text-muted-foreground py-6 text-center text-sm">
+                  Sin clientes en el período.
+                </li>
+              }
+            </ol>
+          }
+        </section>
+      </div>
     </div>
   } @else {
-    <p class="text-muted-foreground py-10 text-center text-sm">No se encontró este asesor.</p>
+    <p class="text-muted-foreground py-10 text-center text-sm">
+      {{
+        facade.hasDateRange()
+          ? "Este asesor no tiene ventas en el rango de fechas seleccionado."
+          : "No se encontró este asesor."
+      }}
+    </p>
   }
 </main>

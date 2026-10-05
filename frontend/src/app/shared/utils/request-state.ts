@@ -1,4 +1,4 @@
-import { Observable, catchError, map, of, startWith } from "rxjs";
+import { Observable, catchError, map, of, scan, startWith, switchMap } from "rxjs";
 
 export interface RequestState<T> {
   data: T | null;
@@ -17,5 +17,26 @@ export function toRequestState<T>(source$: Observable<T>): Observable<RequestSta
     map((data): RequestState<T> => ({ data, loading: false, error: null })),
     catchError((error: Error) => of<RequestState<T>>({ data: null, loading: false, error })),
     startWith<RequestState<T>>(initialRequestState<T>())
+  );
+}
+
+export function switchToRequestState<TParams, T>(
+  params$: Observable<TParams>,
+  fetch: (params: TParams) => Observable<T>
+): Observable<RequestState<T>> {
+  return params$.pipe(
+    switchMap((params) =>
+      fetch(params).pipe(
+        map((data): Partial<RequestState<T>> => ({ data, loading: false, error: null })),
+        catchError((error: Error) =>
+          of<Partial<RequestState<T>>>({ data: null, loading: false, error })
+        ),
+        startWith<Partial<RequestState<T>>>({ loading: true, error: null })
+      )
+    ),
+    scan<Partial<RequestState<T>>, RequestState<T>>(
+      (state, patch) => ({ ...state, ...patch }),
+      initialRequestState<T>()
+    )
   );
 }
