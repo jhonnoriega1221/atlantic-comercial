@@ -1,6 +1,5 @@
-import { Component, inject, OnInit } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { CurrencyPipe, DecimalPipe, PercentPipe } from "@angular/common";
-import { provideIcons } from "@ng-icons/core";
 
 import { SummaryFacade } from "../../facades/summary.facade";
 import { DataState } from "../../../../../shared/components/data-state/data-state";
@@ -13,7 +12,6 @@ import { LocationsRanking } from "../../components/locations-ranking/locations-r
 
 @Component({
   selector: "app-summary-page",
-  standalone: true,
   imports: [
     CurrencyPipe,
     DecimalPipe,
@@ -26,13 +24,9 @@ import { LocationsRanking } from "../../components/locations-ranking/locations-r
     TrendChart,
     LocationsRanking
   ],
-  providers: [provideIcons({})],
+  providers: [SummaryFacade],
   templateUrl: "./summary-page.html"
 })
-export class SummaryPage implements OnInit {
+export class SummaryPage {
   public readonly facade = inject(SummaryFacade);
-
-  ngOnInit(): void {
-    this.facade.loadDashboard();
-  }
 }
