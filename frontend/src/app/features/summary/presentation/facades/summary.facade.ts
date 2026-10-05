@@ -2,6 +2,7 @@
 import { Injectable, inject, signal } from "@angular/core";
 import { GetSummaryDashboardUseCase } from "../../domain/use-cases/get-summary-dashboard.usecase";
 import { finalize } from "rxjs";
+import { KpisResult, LocationItem, TrendItem } from "../../domain/types/summary.types";
 
 @Injectable({ providedIn: "root" })
 export class SummaryFacade {
@@ -10,9 +11,9 @@ export class SummaryFacade {
   readonly isLoading = signal<boolean>(false);
   readonly error = signal<string | null>(null);
 
-  readonly kpis = signal<any | null>(null);
-  readonly trend = signal<any[]>([]);
-  readonly locations = signal<any[]>([]);
+  readonly kpis = signal<KpisResult | null>(null);
+  readonly trend = signal<TrendItem[]>([]);
+  readonly locations = signal<LocationItem[]>([]);
 
   loadDashboard(filters: any = {}): void {
     this.isLoading.set(true);

@@ -1,6 +1,7 @@
 import { Component, input } from "@angular/core";
 import { NgIcon } from "@ng-icons/core";
 import { CurrencyPipe, PercentPipe, NgClass } from "@angular/common";
+import { KpisResult } from "../../../domain/types/summary.types";
 
 @Component({
   imports: [NgIcon, CurrencyPipe, PercentPipe, NgClass],
@@ -9,6 +10,5 @@ import { CurrencyPipe, PercentPipe, NgClass } from "@angular/common";
   templateUrl: "./net-sales-card.html"
 })
 export class NetSalesCard {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  kpis = input.required<any>();
+  kpis = input.required<KpisResult>();
 }

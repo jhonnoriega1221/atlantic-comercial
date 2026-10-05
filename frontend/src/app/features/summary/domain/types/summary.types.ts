@@ -1,5 +1,10 @@
 export interface KpisResult {
-  result: string;
+  netSale: number;
+  transactions: number;
+  activeClients: number;
+  averageOrderValue: number;
+  returnRate: number;
+  salesVariationMoM: number | null;
 }
 
 export interface TrendItem {

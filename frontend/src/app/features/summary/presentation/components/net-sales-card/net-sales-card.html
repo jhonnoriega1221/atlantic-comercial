@@ -15,21 +15,25 @@
       {{ kpis().netSale | currency: "COP" : "symbol-narrow" : "1.0-0" }}
     </div>
     <div class="mt-3 flex items-center gap-2">
-      <span
-        class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold"
-        [ngClass]="
-          kpis().salesVariationMoM >= 0
-            ? 'bg-green-500/10 text-green-600 dark:text-green-400'
-            : 'bg-red-500/10 text-red-600 dark:text-red-400'
-        "
-      >
-        <ng-icon
-          [name]="kpis().salesVariationMoM >= 0 ? 'lucideTrendingUp' : 'lucideTrendingDown'"
-          size="14"
-          class="mr-1"
-        />
-        {{ kpis().salesVariationMoM / 100 | percent: "1.1-2" }} vs mes anterior
-      </span>
+      @if (kpis().salesVariationMoM !== null) {
+        <span
+          class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold"
+          [ngClass]="
+            kpis().salesVariationMoM! >= 0
+              ? 'bg-green-500/10 text-green-600 dark:text-green-400'
+              : 'bg-red-500/10 text-red-600 dark:text-red-400'
+          "
+        >
+          <ng-icon
+            [name]="kpis().salesVariationMoM! >= 0 ? 'lucideTrendingUp' : 'lucideTrendingDown'"
+            size="14"
+            class="mr-1"
+          />
+          {{ kpis().salesVariationMoM! / 100 | percent: "1.1-2" }} vs mes anterior
+        </span>
+      } @else {
+        <span class="text-muted-foreground text-sm">—</span>
+      }
     </div>
   </div>
 </div>

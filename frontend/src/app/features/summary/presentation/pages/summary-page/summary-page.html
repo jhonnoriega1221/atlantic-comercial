@@ -14,7 +14,7 @@
       <section
         class="bg-card group relative col-span-1 flex flex-col justify-between overflow-hidden rounded-xl border p-6 shadow-sm sm:col-span-2 lg:col-span-6"
       >
-        <app-net-sales-card [kpis]="facade.kpis()" />
+        <app-net-sales-card [kpis]="facade.kpis()!" />
       </section>
 
       <!-- Ticket promedio -->
@@ -39,7 +39,7 @@
           title="Transacciones"
           icon="lucideCreditCard"
           description="Órdenes procesadas"
-          [value]="(facade.kpis().transactions | number) ?? '0'"
+          [value]="(facade.kpis()!.transactions | number) ?? '0'"
         />
       </section>
 
@@ -51,7 +51,7 @@
           title="Clientes Activos"
           icon="lucideUsers"
           description="Compradores únicos"
-          [value]="(facade.kpis().activeClients | number) ?? '0'"
+          [value]="(facade.kpis()!.activeClients | number) ?? '0'"
         />
       </section>
 
@@ -63,7 +63,7 @@
           title="Tasa Devolución"
           icon="lucideRotateCcw"
           description="Porcentaje de retornos"
-          [value]="(facade.kpis().returnRate / 100 | percent: '1.1-2') ?? '0%'"
+          [value]="(facade.kpis()!.returnRate / 100 | percent: '1.1-2') ?? '0%'"
         />
       </section>
 

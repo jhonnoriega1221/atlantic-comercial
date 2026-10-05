@@ -43,7 +43,8 @@ import {
   lucideChevronsUpDown,
   lucideChevronsLeft,
   lucideChevronsRight,
-  lucideArrowLeft
+  lucideArrowLeft,
+  lucideTrendingDown
 } from "@ng-icons/lucide";
 
 export const APP_ICONS = {
@@ -91,5 +92,6 @@ export const APP_ICONS = {
   lucideChevronsUpDown,
   lucideChevronsLeft,
   lucideChevronsRight,
-  lucideArrowLeft
+  lucideArrowLeft,
+  lucideTrendingDown
 } as const;

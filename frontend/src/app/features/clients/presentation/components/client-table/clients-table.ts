@@ -1,4 +1,3 @@
-// clients-table.ts
 import { Component, computed, input, output } from "@angular/core";
 import { DecimalPipe } from "@angular/common";
 import { HlmButtonImports } from "@spartan-ng/helm/button";
