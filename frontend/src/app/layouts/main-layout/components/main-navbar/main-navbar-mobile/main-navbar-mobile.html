@@ -1,0 +1,19 @@
+<section class="navbar-container">
+  <div class="navbar-body">
+    @for (bottomItem of items; track $index) {
+      <a
+        hlmBtn
+        variant="ghost"
+        class="navbar-item"
+        [routerLinkActiveOptions]="{ exact: bottomItem.url === '/' }"
+        [routerLink]="bottomItem.url"
+        routerLinkActive="is-active"
+      >
+        <ng-icon class="navbar-item-icon" [name]="bottomItem.icon" />
+        <p class="navbar-item-label">
+          {{ bottomItem.title }}
+        </p>
+      </a>
+    }
+  </div>
+</section>

@@ -2,8 +2,8 @@ import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { ClientSummaryEntity } from "./domain/entities/client-summary.entity.js";
 import { ClientController } from "./infrastructure/controllers/client.controller.js";
-import { I_CLIENTS_REPOSITORY } from "./domain/repositories/client.repository.js";
-import { ClientRepository } from "./infrastructure/repositories/client.repository.js";
+import { ClientRepository } from "./domain/repositories/client.repository.js";
+import { TypeOrmClientRepository } from "./infrastructure/repositories/type-orm-client.repository.js";
 import { ClientService } from "./application/services/client.service.js";
 
 @Module({
@@ -11,8 +11,8 @@ import { ClientService } from "./application/services/client.service.js";
   controllers: [ClientController],
   providers: [
     {
-      provide: I_CLIENTS_REPOSITORY,
-      useClass: ClientRepository
+      provide: ClientRepository,
+      useClass: TypeOrmClientRepository
     },
     ClientService
   ]

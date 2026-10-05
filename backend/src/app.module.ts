@@ -5,9 +5,10 @@ import { HealthModule } from "./features/health/health.module.js";
 import { SalesModule } from "./features/sales/sales.module.js";
 import { DatabaseModule } from "./core/database/database.module.js";
 import { ClientsModule } from "./features/clients/clients.module.js";
+import { AdvisorsModule } from "./features/advisors/advisors.module.js";
 
 @Module({
-  imports: [HealthModule, SalesModule, DatabaseModule, ClientsModule],
+  imports: [HealthModule, SalesModule, DatabaseModule, ClientsModule, AdvisorsModule],
   controllers: [AppController],
   providers: [AppService]
 })

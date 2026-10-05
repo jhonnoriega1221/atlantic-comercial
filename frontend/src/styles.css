@@ -1,3 +1,134 @@
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/preflight.css" layer(base);
+@import "tailwindcss/utilities.css";
+
+@import "@spartan-ng/brain/hlm-tailwind-preset.css";
+
 /* You can add global styles to this file, and also import other style files */
 
-@import "tailwindcss";
+:root {
+  color-scheme: light;
+
+  --font-sans:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans",
+    sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+  --sidebar-width: 240px;
+  --sidebar-padding: 20px;
+  --bottombar-height: 64px;
+  --bottombar-padding: 18px;
+
+  /* Tonos vibrantes para gráficos */
+  --chart-1: oklch(0.65 0.2 260);
+  --chart-2: oklch(0.7 0.15 190);
+  --chart-3: oklch(0.75 0.18 150);
+  --chart-4: oklch(0.85 0.18 80);
+  --chart-5: oklch(0.65 0.2 340);
+
+  --radius: 0.625rem;
+
+  /* Fondos con un ligero tinte frío y textos oscuros profundos */
+  --background: oklch(0.99 0.005 260);
+  --foreground: oklch(0.25 0.02 260);
+
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.25 0.02 260);
+
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.25 0.02 260);
+
+  /* Indigo vibrante para acciones principales */
+  --primary: oklch(0.55 0.2 260);
+  --primary-foreground: oklch(0.98 0 0);
+
+  /* Tonos secundarios y muteados basados en slate */
+  --secondary: oklch(0.94 0.02 260);
+  --secondary-foreground: oklch(0.35 0.05 260);
+
+  --muted: oklch(0.96 0.01 260);
+  --muted-foreground: oklch(0.55 0.03 260);
+
+  --accent: oklch(0.94 0.02 260);
+  --accent-foreground: oklch(0.35 0.05 260);
+
+  --destructive: oklch(0.6 0.2 25);
+  --destructive-foreground: oklch(0.98 0 0);
+
+  --border: oklch(0.9 0.02 260);
+  --input: oklch(0.9 0.02 260);
+  --ring: oklch(0.55 0.2 260);
+
+  /* Sidebar integrado con el tema slate */
+  --sidebar: oklch(1 0 0);
+  --sidebar-foreground: oklch(0.25 0.02 260);
+  --sidebar-hover: color-mix(in srgb, var(--sidebar-foreground) 8%, transparent);
+  --sidebar-primary: oklch(0.55 0.2 260);
+  --sidebar-primary-foreground: oklch(0.98 0 0);
+  --sidebar-accent: oklch(0.92 0.02 260);
+  --sidebar-accent-foreground: oklch(0.3 0.03 260);
+  --sidebar-border: oklch(0.9 0.02 260);
+  --sidebar-ring: oklch(0.55 0.2 260);
+  --sidebar-shadow: 0 10px 10px oklch(0.25 0.02 260 / 0.08);
+}
+
+:root.dark {
+  color-scheme: dark;
+
+  /* Gráficos ajustados para contraste en modo oscuro */
+  --chart-1: oklch(0.75 0.18 260);
+  --chart-2: oklch(0.8 0.15 190);
+  --chart-3: oklch(0.85 0.15 150);
+  --chart-4: oklch(0.9 0.15 80);
+  --chart-5: oklch(0.75 0.18 340);
+
+  /* Fondo dark slate profundo, no negro puro */
+  --background: oklch(0.18 0.02 260);
+  --foreground: oklch(0.98 0.005 260);
+
+  --card: oklch(0.22 0.02 260);
+  --card-foreground: oklch(0.98 0.005 260);
+
+  --popover: oklch(0.22 0.02 260);
+  --popover-foreground: oklch(0.98 0.005 260);
+
+  /* Indigo más claro para mantener legibilidad sobre fondo oscuro */
+  --primary: oklch(0.65 0.2 260);
+  --primary-foreground: oklch(0.15 0.02 260);
+
+  --secondary: oklch(0.28 0.03 260);
+  --secondary-foreground: oklch(0.98 0.005 260);
+
+  --muted: oklch(0.28 0.03 260);
+  --muted-foreground: oklch(0.7 0.03 260);
+
+  --accent: oklch(0.28 0.03 260);
+  --accent-foreground: oklch(0.98 0.005 260);
+
+  --destructive: oklch(0.65 0.2 25);
+  --destructive-foreground: oklch(0.98 0 0);
+
+  --border: oklch(0.3 0.03 260);
+  --input: oklch(0.3 0.03 260);
+  --ring: oklch(0.65 0.2 260);
+
+  --sidebar: oklch(0.22 0.02 260);
+  --sidebar-foreground: oklch(0.98 0.005 260);
+  --sidebar-hover: color-mix(in srgb, var(--sidebar-foreground) 12%, transparent);
+  --sidebar-primary: oklch(0.65 0.2 260);
+  --sidebar-primary-foreground: oklch(0.98 0.005 260);
+  --sidebar-accent: oklch(0.25 0.02 260);
+  --sidebar-accent-foreground: oklch(0.98 0.005 260);
+  --sidebar-border: oklch(0.25 0.02 260);
+  --sidebar-ring: oklch(0.65 0.2 260);
+  --sidebar-shadow: 0 10px 10pxoklch (0 0 0 / 0.5);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}

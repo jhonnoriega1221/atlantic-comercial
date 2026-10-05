@@ -1,7 +1,7 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsIn, IsNumber, IsOptional, IsString, Min } from "class-validator";
-import { GlobalFilterDto } from "../../../../shared/application/dtos/global-filter.dto.js";
+import { GlobalFilterDto } from "../../../../shared/utils/global-filter.dto.js";
 
 export class ClientsQueryDto extends GlobalFilterDto {
   @ApiPropertyOptional({ description: "Página actual", default: 1 })

@@ -1,0 +1,17 @@
+<ng-template #contentTpl>
+  <ng-content />
+</ng-template>
+
+@if (isMobile()) {
+  <hlm-drawer [state]="state()" (closed)="handleClosed()">
+    <hlm-drawer-content *hlmDrawerPortal class="touch-none overflow-x-hidden overflow-y-auto">
+      <ng-container *ngTemplateOutlet="contentTpl" />
+    </hlm-drawer-content>
+  </hlm-drawer>
+} @else {
+  <hlm-dialog [state]="state()" (closed)="handleClosed()">
+    <hlm-dialog-content *hlmDialogPortal class="overflow-x-hidden overflow-y-auto">
+      <ng-container *ngTemplateOutlet="contentTpl" />
+    </hlm-dialog-content>
+  </hlm-dialog>
+}

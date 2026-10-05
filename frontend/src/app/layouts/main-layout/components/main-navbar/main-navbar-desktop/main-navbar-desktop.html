@@ -1,0 +1,40 @@
+<section class="sidebar-overlay">
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <p class="mt-4 text-center font-bold">Atlantic Dashboard</p>
+    </div>
+    <div class="sidebar-body">
+      <div class="sidebar-top">
+        @for (topItem of topItems; track $index) {
+          <a
+            position="right"
+            hlmBtn
+            variant="ghost"
+            size="icon-lg"
+            [routerLink]="topItem.url"
+            routerLinkActive="is-active"
+            [routerLinkActiveOptions]="{ exact: topItem.url === '/' }"
+          >
+            <ng-icon class="h-5! w-5!" [name]="topItem.icon" />
+            <span>{{ topItem.title }}</span>
+          </a>
+        }
+      </div>
+      <div class="sidebar-bottom">
+        @for (bottomItem of bottomItems; track $index) {
+          <a
+            hlmBtn
+            position="right"
+            variant="ghost"
+            size="icon-lg"
+            [routerLink]="bottomItem.url"
+            routerLinkActive="is-active"
+            [routerLinkActiveOptions]="{ exact: bottomItem.url === '/' }"
+          >
+            <ng-icon class="h-5! w-5!" [name]="bottomItem.icon" />
+          </a>
+        }
+      </div>
+    </div>
+  </div>
+</section>
