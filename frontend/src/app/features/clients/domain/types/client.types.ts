@@ -1,3 +1,5 @@
+import { GlobalFilters } from "../../../../shared/utils/global-filters";
+
 export interface ClientItem {
   clientId: string;
   clientName: string;
@@ -20,7 +22,7 @@ export interface ClientSort {
   sortOrder: SortOrder;
 }
 
-export interface ClientsFilters {
+export interface ClientsFilters extends GlobalFilters {
   page: number;
   limit: number;
   search: string;

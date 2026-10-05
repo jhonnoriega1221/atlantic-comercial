@@ -7,7 +7,7 @@ import {
   formatMillions,
   formatPercent,
   int
-} from "../../../../../shared/components/utils/format";
+} from "../../../../../shared/utils/format";
 
 @Component({
   selector: "app-location-ranking-card",

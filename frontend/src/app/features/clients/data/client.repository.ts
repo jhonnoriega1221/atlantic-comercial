@@ -15,6 +15,7 @@ export class ClientsRepository {
       params["sortBy"] = f.sortBy;
       params["sortOrder"] = f.sortOrder;
     }
+    if (f.advisor) params["advisor"] = f.advisor;
     return this.http.get<PaginatedResult<ClientItem>>("/clients", { params });
   }
 
