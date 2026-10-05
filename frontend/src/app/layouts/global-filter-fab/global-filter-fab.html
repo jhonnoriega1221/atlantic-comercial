@@ -46,7 +46,7 @@
 
     <label class="block space-y-1.5 text-sm font-medium">
       Sede
-      <select hlmInput formControlName="location" class="w-full">
+      <select hlmInput formControlName="location" class="bg-background! w-full">
         <option value="">Todas las sedes</option>
         @for (loc of options().locations; track loc) {
           <option [value]="loc">{{ displayLocation(loc) }}</option>
@@ -56,7 +56,7 @@
 
     <label class="block space-y-1.5 text-sm font-medium">
       Asesor
-      <select hlmInput formControlName="advisor" class="w-full">
+      <select hlmInput formControlName="advisor" class="bg-background! w-full">
         <option value="">Todos los asesores</option>
         @for (a of advisorOptions(); track a.code) {
           <option [value]="a.code">{{ a.name }}</option>
