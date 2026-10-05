@@ -60,8 +60,33 @@ def data_ingestion():
     dim_asesores.to_sql('dim_asesores', conn, if_exists='append', index=False)
     rel_cliente_asesor.to_sql('rel_cliente_asesor', conn, if_exists='append', index=False)
     df_ventas[['Periodo', 'Cod Principal', 'Cod Material', 'Neto']].to_sql('fact_ventas', conn, if_exists='append', index=False)
+    
+    conn.executescript("""
+    DROP TABLE IF EXISTS agg_ventas_mensual;
+
+    CREATE TABLE agg_ventas_mensual AS
+    SELECT
+        v.Periodo,
+        a.Sede,
+        a.[Cod Asesor],
+        a.[Nombre Asesor],
+        COUNT(v.[Cod Principal])          AS Transacciones,
+        COUNT(DISTINCT v.[Cod Principal]) AS Clientes_Activos,
+        SUM(v.Neto)                       AS Venta_Neta,
+        SUM(CASE WHEN v.Neto < 0 THEN v.Neto ELSE 0 END) AS Devoluciones
+    FROM fact_ventas v
+    LEFT JOIN rel_cliente_asesor r ON v.[Cod Principal] = r.[Cod Cliente]
+    LEFT JOIN dim_asesores a       ON r.[Cod Asesor] = a.[Cod Asesor]
+    GROUP BY v.Periodo, a.Sede, a.[Cod Asesor], a.[Nombre Asesor];
+
+    CREATE INDEX idx_agg_periodo_sede_asesor
+        ON agg_ventas_mensual(Periodo, Sede, [Cod Asesor]);
+    """)
 
     conn.commit()
+    
+    conn.execute("ANALYZE")
+    conn.execute("VACUUM")
     conn.close()
     
     print(f"Base de datos creada correctamente en: {DB_PATH}")

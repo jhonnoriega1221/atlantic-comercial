@@ -1,31 +1,31 @@
-import { ViewEntity, ViewColumn } from "typeorm";
+import { ViewEntity, PrimaryColumn, Column } from "typeorm";
 
 @ViewEntity({
-  name: "view_ventas_agregadas",
+  name: "agg_ventas_mensual",
   synchronize: false
 })
 export class AggregatedSalesEntity {
-  @ViewColumn({ name: "Periodo" })
+  @PrimaryColumn({ name: "Periodo" })
   period: string;
 
-  @ViewColumn({ name: "Sede" })
-  location: string;
-
-  @ViewColumn({ name: "Cod Asesor" })
+  @PrimaryColumn({ name: "Cod Asesor" })
   advisorCode: string;
 
-  @ViewColumn({ name: "Nombre Asesor" })
+  @Column({ name: "Sede" })
+  location: string;
+
+  @Column({ name: "Nombre Asesor" })
   advisorName: string;
 
-  @ViewColumn({ name: "Transacciones" })
+  @Column({ name: "Transacciones" })
   transactions: number;
 
-  @ViewColumn({ name: "Clientes_Activos" })
+  @Column({ name: "Clientes_Activos" })
   activeClients: number;
 
-  @ViewColumn({ name: "Venta_Neta" })
+  @Column({ name: "Venta_Neta" })
   netSale: number;
 
-  @ViewColumn({ name: "Devoluciones" })
+  @Column({ name: "Devoluciones" })
   returns: number;
 }

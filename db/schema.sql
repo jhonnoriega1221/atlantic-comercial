@@ -1,3 +1,6 @@
+DROP VIEW IF EXISTS view_ventas_agregadas; -- Vista vieja
+DROP VIEW IF EXISTS view_clientes_resumen;
+DROP TABLE IF EXISTS agg_ventas_mensual;
 DROP TABLE IF EXISTS fact_ventas;
 DROP TABLE IF EXISTS dim_tiempo;
 DROP TABLE IF EXISTS dim_clientes;
@@ -65,25 +68,7 @@ CREATE TABLE fact_ventas (
 );
 
 --- Vistas:
--- Vista para el resumen de las ventas
-DROP VIEW IF EXISTS view_ventas_agregadas;
-CREATE VIEW view_ventas_agregadas AS
-SELECT 
-    v.Periodo,
-    a.Sede,
-    a.[Cod Asesor],
-    a.[Nombre Asesor],
-    COUNT(v.[Cod Principal]) as Transacciones,
-    COUNT(DISTINCT v.[Cod Principal]) as Clientes_Activos,
-    SUM(v.Neto) as Venta_Neta,
-    SUM(CASE WHEN v.Neto < 0 THEN v.Neto ELSE 0 END) as Devoluciones
-FROM fact_ventas v
-LEFT JOIN rel_cliente_asesor r ON v.[Cod Principal] = r.[Cod Cliente]
-LEFT JOIN dim_asesores a ON r.[Cod Asesor] = a.[Cod Asesor]
-GROUP BY v.Periodo, a.Sede, a.[Cod Asesor], a.[Nombre Asesor];
-
 -- Vista para el listado y ranking de clientes
-DROP VIEW IF EXISTS view_clientes_resumen;
 CREATE VIEW view_clientes_resumen AS
 SELECT 
     c.[Cod Cliente],

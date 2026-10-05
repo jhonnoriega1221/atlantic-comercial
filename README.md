@@ -13,12 +13,11 @@ Aplicación web para que la Gerencia Comercial de **Atlantic Food Service** siga
 
 ## Enlaces
 
-| Recurso                  | URL                                                    |
-| ------------------------ | ------------------------------------------------------ |
-| Aplicación publicada     | https://afs-dashboard-nine.vercel.app/                 |
-| Documentación de la API  | https://afs-api.onrender.com/api/docs                  |
-| Hallazgos de calidad     | [DATA_QUALITY.md](./DATA_QUALITY.md)                   |
-| Resumen para la gerencia | [docs/resumen_gerencia.md](./docs/resumen_gerencia.md) |
+| Recurso                 | URL                                    |
+| ----------------------- | -------------------------------------- |
+| Aplicación publicada    | https://afs-dashboard-nine.vercel.app/ |
+| Documentación de la API | https://afs-api.onrender.com/api/docs  |
+| Hallazgos de calidad    | [DATA_QUALITY.md](./DATA_QUALITY.md)   |
 
 ## Arquitectura
 
@@ -41,9 +40,10 @@ El pipeline lee `Base_Original.xlsx`, limpia las cinco hojas y genera `db/afs_co
 
 - **Hechos:** `fact_ventas`.
 - **Dimensiones:** `dim_clientes`, `dim_materiales`, `dim_asesores` (asesor y sede) y `dim_tiempo`, más las relaciónes `rel_cliente_asesor`.
-- **Vistas de apoyo:** `view_ventas_agregadas` (venta mensual por sede y asesor) y `view_clientes_resumen` (información resumida de los clientes).
+- **Tabla pre-agregada:** `agg_ventas_mensual` (venta mensual por sede y asesor). Se calcula una sola vez al final de la ingesta, después de cargar `fact_ventas`.
+- **Vistas de apoyo:** `view_clientes_resumen` (información resumida de los clientes).
 
-Las vistas agregadas evitan recorrer las ~446.700 filas de ventas en cada consulta de resumen. Cada hallazgo de calidad (qué se encontró, cuántos registros afecta y cómo se resolvió) está en [DATA_QUALITY.md](./DATA_QUALITY.md).
+`agg_ventas_mensual` evita recorrer las ~446.700 filas de ventas en cada consulta de resumen: el backend lee solo ~126 filas ya calculadas. Se usa una tabla en lugar de una vista porque en SQLite las vistas no se materializan y se recalculan completas en cada consulta. Como los datos provienen de un Excel y no cambian en tiempo real, basta con regenerar la base (y volver a desplegar el `.sqlite`) cuando cambie la fuente. Cada hallazgo de calidad (qué se encontró, cuántos registros afecta y cómo se resolvió) está en [DATA_QUALITY.md](./DATA_QUALITY.md).
 
 ### Backend (NestJS)
 
@@ -120,7 +120,7 @@ El criterio principal fue **reducir el riesgo**: con dos días para una solució
 ├── db/                  # base SQLite generada
 ├── backend/             # API NestJS y pruebas
 ├── frontend/            # aplicación Angular
-├── docs/                # resumen para la gerencia
+├── docs/
 ├── .github/workflows/   # integración continua
 ├── docker-compose.yml
 ├── .env.example
