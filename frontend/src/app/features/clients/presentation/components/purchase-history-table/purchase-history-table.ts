@@ -19,6 +19,7 @@ export class PurchaseHistoryTable {
   readonly page = input.required<number>();
   readonly limit = input.required<number>();
   readonly isFetching = input(false);
+  readonly emptyMessage = input("Este cliente no tiene compras registradas.");
 
   readonly pageChange = output<number>();
 

@@ -38,7 +38,7 @@
         } @empty {
           <tr hlmTr>
             <td hlmTd class="h-24 text-center" [attr.colspan]="3">
-              Este cliente no tiene compras registradas.
+              {{ emptyMessage() }}
             </td>
           </tr>
         }

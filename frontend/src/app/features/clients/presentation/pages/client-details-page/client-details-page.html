@@ -1,7 +1,7 @@
 <main class="mx-auto max-w-7xl space-y-4 px-4 py-3">
   <button hlmBtn variant="ghost" size="sm" class="-ml-2" (click)="back()">
     <ng-icon name="lucideArrowLeft" />
-    Volver a clientes
+    Volver
   </button>
 
   @if (facade.isLoading()) {
@@ -27,6 +27,11 @@
       [page]="facade.page()"
       [limit]="facade.limit"
       [isFetching]="facade.isFetching()"
+      [emptyMessage]="
+        facade.hasActiveFilters()
+          ? 'Este cliente no tiene compras con los filtros seleccionados.'
+          : 'Este cliente no tiene compras registradas.'
+      "
       (pageChange)="facade.setPage($event)"
     />
   }

@@ -1,3 +1,5 @@
+import { GlobalFilters } from "../../../../shared/global-filters/global-filters.types";
+
 export interface PurchaseItem {
   transactionId: number;
   productId: string;
@@ -15,7 +17,7 @@ export interface ClientHistory {
   lastPage: number;
 }
 
-export interface HistoryFilters {
+export interface HistoryFilters extends GlobalFilters {
   page: number;
   limit: number;
 }

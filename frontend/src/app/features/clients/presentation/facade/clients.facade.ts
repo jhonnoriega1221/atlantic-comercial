@@ -1,4 +1,4 @@
-import { Injectable, computed, effect, inject } from "@angular/core";
+import { Injectable, computed, effect, inject, untracked } from "@angular/core";
 import { toObservable, toSignal } from "@angular/core/rxjs-interop";
 import { ActivatedRoute, ParamMap, Router } from "@angular/router";
 import {
@@ -21,6 +21,7 @@ import {
   PaginatedResult
 } from "../../domain/types/client.types";
 import { GetClientsUseCase } from "../../domain/use-cases/get-clients.usecase";
+import { GlobalFiltersStore } from "../../../../shared/global-filters/global-filters.store";
 
 const DEFAULT_LIMIT = 10;
 const LIMITS = [10, 20, 50];
@@ -55,12 +56,16 @@ export class ClientsFacade {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly getClients = inject(GetClientsUseCase);
+  private readonly global = inject(GlobalFiltersStore);
 
   private readonly queryParams = toSignal(this.route.queryParamMap, {
     initialValue: this.route.snapshot.queryParamMap
   });
 
-  readonly filters = computed(() => parseFilters(this.queryParams()));
+  readonly filters = computed<ClientsFilters>(() => ({
+    ...parseFilters(this.queryParams()),
+    ...this.global.filters()
+  }));
 
   private readonly retry$ = new BehaviorSubject<void>(undefined);
 
@@ -93,12 +98,20 @@ export class ClientsFacade {
   readonly error = computed(() => this.state().error);
 
   constructor() {
+    let previous = JSON.stringify(this.global.filters());
+
     effect(() => {
       const { data, loading } = this.state();
+      const key = JSON.stringify(this.global.filters());
       if (!data || loading) return; // mientras carga, `data` puede ser de la consulta anterior
       if (data.lastPage > 0 && this.filters().page > data.lastPage) {
         this.updateUrl({ page: data.lastPage }, true);
       }
+      if (key === previous) return;
+      previous = key;
+      untracked(() => {
+        if (this.filters().page !== 1) this.updateUrl({ page: null }, true);
+      });
     });
   }
 
