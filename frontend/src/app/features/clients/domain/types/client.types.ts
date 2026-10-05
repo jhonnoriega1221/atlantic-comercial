@@ -1,4 +1,4 @@
-import { GlobalFilters } from "../../../../shared/utils/global-filters";
+import { GlobalFilters } from "../../../../shared/global-filters/global-filters.types";
 
 export interface ClientItem {
   clientId: string;
