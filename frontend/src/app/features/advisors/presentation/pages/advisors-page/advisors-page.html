@@ -1,1 +1,26 @@
-<p>advisors-page works!</p>
+<main class="mx-auto max-w-7xl space-y-4 px-4 py-3">
+  <header>
+    <h1 class="text-xl font-semibold tracking-tight">Asesores</h1>
+    <p class="text-muted-foreground text-sm">
+      Ranking por venta neta en cada sede. Toca un asesor para ver su detalle.
+    </p>
+  </header>
+
+  @if (facade.isLoading()) {
+    <div class="grid gap-4 lg:grid-cols-2">
+      @for (i of [1, 2, 3, 4]; track i) {
+        <div class="bg-muted h-64 animate-pulse rounded-xl"></div>
+      }
+    </div>
+  } @else if (facade.error()) {
+    <app-data-state type="error" (action)="facade.retry()" />
+  } @else if (facade.rankings().length === 0) {
+    <p class="text-muted-foreground py-10 text-center text-sm">No hay asesores para mostrar.</p>
+  } @else {
+    <div class="grid gap-4 lg:grid-cols-2">
+      @for (ranking of facade.rankings(); track ranking.location) {
+        <app-location-ranking-card [ranking]="ranking" [maxSales]="facade.maxSales()" />
+      }
+    </div>
+  }
+</main>

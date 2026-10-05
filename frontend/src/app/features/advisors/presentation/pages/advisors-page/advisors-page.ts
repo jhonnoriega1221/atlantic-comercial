@@ -1,9 +1,14 @@
-import { Component } from "@angular/core";
+import { Component, inject } from "@angular/core";
+import { LocationRankingCard } from "../../components/location-ranking-card/location-ranking-card";
+import { DataState } from "../../../../../shared/components/data-state/data-state";
+import { AdvisorsFacade } from "../../facades/advisors.facade";
 
 @Component({
-  imports: [],
   selector: "app-advisors-page",
-  styleUrl: "./advisors-page.css",
+  imports: [LocationRankingCard, DataState],
+  providers: [AdvisorsFacade],
   templateUrl: "./advisors-page.html"
 })
-export class AdvisorsPage {}
+export class AdvisorsPage {
+  protected readonly facade = inject(AdvisorsFacade);
+}

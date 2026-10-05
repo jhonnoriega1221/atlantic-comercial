@@ -1,0 +1,55 @@
+<section class="bg-card rounded-xl border p-5 shadow-sm">
+  <header class="mb-2 flex items-baseline justify-between gap-2">
+    <div>
+      <h2 class="text-base font-semibold tracking-tight">
+        {{ displayLocation(ranking().location) }}
+      </h2>
+      <p class="text-muted-foreground text-xs">{{ ranking().advisors.length }} asesores</p>
+    </div>
+    <p class="text-sm font-medium tabular-nums">{{ formatMillions(ranking().totalSales) }}</p>
+  </header>
+
+  <ol class="divide-y">
+    @for (advisor of ranking().advisors; track advisor.advisorCode; let i = $index) {
+      <li>
+        <a
+          [routerLink]="['/advisors', advisor.advisorCode]"
+          class="hover:bg-muted/50 -mx-2 block rounded-md px-2 py-3"
+        >
+          <div class="flex items-center gap-3">
+            <span class="text-muted-foreground w-5 text-sm tabular-nums">{{ i + 1 }}</span>
+            <span class="flex-1 truncate font-medium">{{ advisor.advisorName }}</span>
+            <span class="text-sm font-medium tabular-nums">{{
+              formatMillions(advisor.netSale)
+            }}</span>
+
+            @if (advisor.salesVariationMoM !== null) {
+              <span
+                class="w-14 text-right text-xs font-medium tabular-nums"
+                [class]="
+                  advisor.salesVariationMoM >= 0
+                    ? 'text-emerald-600 dark:text-emerald-400'
+                    : 'text-red-600 dark:text-red-400'
+                "
+              >
+                {{ formatPercent(advisor.salesVariationMoM) }}
+              </span>
+            } @else {
+              <span class="text-muted-foreground w-14 text-right text-xs">—</span>
+            }
+          </div>
+          <div class="bg-muted mt-2 ml-8 h-1.5 overflow-hidden rounded-full">
+            <div
+              class="bg-primary h-full rounded-full"
+              [style.width.%]="barWidth(advisor.netSale)"
+            ></div>
+          </div>
+          <p class="text-muted-foreground mt-1 ml-8 text-xs">
+            {{ int.format(advisor.activeClients) }} clientes/mes · ticket
+            {{ cop.format(advisor.averageTicket) }}
+          </p>
+        </a>
+      </li>
+    }
+  </ol>
+</section>
